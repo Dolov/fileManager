@@ -1,0 +1,56 @@
+
+@prefixCls: doraa-file-manager;
+
+.@{prefixCls} {
+  .flex-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .ellipsis {
+    display: -webkit-box;
+    -webkit-line-clamp: 2; /* 文本显示的行数 */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis; /* 超出部分显示省略号 */
+  }
+
+  &-content {
+    display: grid;
+    grid-template-columns: repeat(var(--columns), 1fr);
+    grid-row-gap: 24px;
+    grid-column-gap: 36px;
+  }
+
+  &-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    overflow: hidden;
+
+    &-content {
+      padding: 16px;
+      border-radius: 5px;
+    }
+
+    &-name {
+      .ellipsis();
+      text-align: center;
+      font-size: 12px;
+      margin-top: 3px;
+      padding: 2px 8px;
+      border-radius: 3px;
+    }
+
+    &.selected &-content {
+      background: #f0f0f0;
+    }
+
+    &.selected &-name {
+      background: #1890ff;
+      color: white;
+    }
+  }
+}

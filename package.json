@@ -56,6 +56,7 @@
     "@commitlint/config-conventional": "^17.6.5",
     "@types/react": "^18.2.12",
     "@types/react-dom": "^18.2.5",
+    "@types/react-modal": "^3.16.0",
     "@umijs/lint": "^4.0.70",
     "dumi": "^2.2.1",
     "eslint": "^8.42.0",
@@ -70,6 +71,8 @@
     "stylelint": "^15.7.0"
   },
   "dependencies": {
+    "react-markdown": "^8.0.7",
+    "react-modal": "^3.16.1",
     "react-viewer": "^3.2.2"
   }
 }

@@ -14,8 +14,9 @@ const data: FileManagerProps["data"] = [
     leaf: false,
     children: [
       {
-        name: 'react使用说明.md',
+        name: 'reac12t使用说明.md',
         leaf: true,
+        url: "https://dolov-upic.oss-cn-beijing.aliyuncs.com/README.md"
       },
     ]
   },
@@ -26,7 +27,7 @@ const data: FileManagerProps["data"] = [
     children: [
       {
         id: "12",
-        name: 'react使用说明.md',
+        name: 'react使32用说明.md',
         leaf: true,
       },
     ]
@@ -37,7 +38,7 @@ const data: FileManagerProps["data"] = [
     leaf: false,
     children: [
       {
-        name: 'react使用说明.md',
+        name: 'react使用34说明.md',
         leaf: true,
       },
     ]
@@ -125,11 +126,13 @@ const data: FileManagerProps["data"] = [
     id: "121a21baaffaafdfafa12bab2",
     name: '.gitignore',
     leaf: true,
+    url: 'https://dolov-upic.oss-cn-beijing.aliyuncs.com/.gitignore'
   },
   {
     id: "121a21baaffbab2",
     name: 'readme.md',
     leaf: true,
+    url: "https://dolov-upic.oss-cn-beijing.aliyuncs.com/README.md"
   },
   {
     id: "121affbab2",

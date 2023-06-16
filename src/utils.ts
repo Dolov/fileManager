@@ -11,6 +11,10 @@ export interface FileItemProps {
 	children?: FileItemProps[]
 }
 
+export interface ViewerRefProps {
+	open(file: FileItemProps): void
+}
+
 /** 监听元素宽度变化 */
 export const useDomWidth = () => {
 	const ref = React.useRef<HTMLDivElement>(null)
@@ -40,7 +44,8 @@ export const useDomWidth = () => {
 /** 获取文件后缀 */
 export const getExt = (name: string) => {
 	if (!name) return null
-	return name.substr(name.lastIndexOf(".") + 1)
+	const type = name.substr(name.lastIndexOf(".") + 1)
+	return type.toLowerCase()
 }
 
 
@@ -84,9 +89,9 @@ export const usePressKey = (keyName: string, fn: () => void, deps: any[]) => {
 	}, deps)
 
 	React.useEffect(() => {
-		document.addEventListener('keypress', callback)
+		document.addEventListener('keydown', callback)
 		return () => {
-			document.removeEventListener('keypress', callback)
+			document.removeEventListener('keydown', callback)
 		}
 	}, deps)
 }
@@ -94,9 +99,22 @@ export const usePressKey = (keyName: string, fn: () => void, deps: any[]) => {
 
 export const imgTypes = ['jpeg', 'jpg', 'png', 'gif', 'bmp', 'webp', 'svg', 'svgz']
 
+export const mdTypes = ['markdown', 'md']
+
 export const transformType = (name: string) => {
 	const ext = getExt(name)
 	if (!ext) return 'unknow'
+	if (mdTypes.includes(ext)) return 'markdown'
 	if (imgTypes.includes(ext)) return 'image'
 	return ext
+}
+
+export const getFileViewType = (name: string) => {
+	const ext = getExt(name)
+	if (!ext) return
+	if (mdTypes.includes(ext)) return 'markdown'
+	if (imgTypes.includes(ext)) return 'image'
+
+	const textType = ['gitignore']
+	if (textType.includes(ext)) return 'text'
 }

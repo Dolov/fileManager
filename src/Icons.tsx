@@ -204,7 +204,7 @@ const Image = () => {
 }
 
 export interface IconsProps {
-  name: 'folder' | 'excel' | 'xls' | 'xlsx' | 'word' | 'doc' | 'docx' | 'js' | 'ts' | 'jsx' | 'tsx' | 'gitignore' | 'md' | 'image'
+  name: 'folder' | 'excel' | 'xls' | 'xlsx' | 'word' | 'doc' | 'docx' | 'js' | 'ts' | 'jsx' | 'tsx' | 'gitignore' | 'markdown' | 'image'
   size?: number
   width?: number | string
 }
@@ -222,7 +222,7 @@ const iconMap = {
   jsx: Jsx,
   tsx: Jsx,
   gitignore: Git,
-  md: Markdown,
+  markdown: Markdown,
   image: Image,
 }
 

@@ -1,7 +1,7 @@
 import React, { FC } from 'react'
-import { prefixCls, FileItemProps, getExt, imgTypes } from './utils'
+import { prefixCls, FileItemProps, ViewerRefProps } from './utils'
 import File from './File'
-import ImageView from './ImageView'
+import FileViewer from './Viewers/index'
 
 export interface ContentProps {
   data: FileItemProps[]
@@ -9,25 +9,33 @@ export interface ContentProps {
 
 const Content: FC<ContentProps> = (props) => {
   const { data } = props
-  const [viewFile, setViewFile] = React.useState<FileItemProps>()
+
+  const [files, setFiles] = React.useState(data)
+  const fileViewerRef = React.useRef<ViewerRefProps>(null)
 
   const handleFileView = (file: FileItemProps) => {
-    setViewFile(file)
+    /** 点击了文件夹 */
+    if (!file.leaf) {
+      setFiles(file.children!)
+      return
+    }
+    if (!fileViewerRef.current) return
+    fileViewerRef.current.open(file)
   }
 
   return (
     <div className={`${prefixCls}-content`}>
-      {data.map(item => {
-        const { id } = item
+      {files.map(file => {
+        const { id } = file
         return (
           <File
             key={id}
-            data={item}
+            file={file}
             onFileView={handleFileView}
           />
         )
       })}
-      <ImageView data={data} file={viewFile} />
+      <FileViewer ref={fileViewerRef} data={data} />
     </div>
   )
 }

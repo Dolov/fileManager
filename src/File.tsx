@@ -3,14 +3,14 @@ import Icon, { IconsProps } from './Icons'
 import { transformType, useDomWidth, FileItemProps, prefixCls, classnames, StateContext, usePressKey } from './utils'
 
 export interface FileProps {
-  data: FileItemProps
+  file: FileItemProps
   onFileView(file: FileItemProps): void
 }
 
 const File: FC<FileProps> = props => {
   const { onSelectFile, selectedFiles } = React.useContext(StateContext)
-  const { data, onFileView } = props
-  const { name, leaf } = data
+  const { file, onFileView } = props
+  const { name, leaf } = file
   const { ref, width } = useDomWidth()
 
   const iconWidth = width! * 0.7
@@ -21,11 +21,11 @@ const File: FC<FileProps> = props => {
     child = <Icon name={ext} size={iconWidth} />
   }
 
-  const handleClick = () => onSelectFile(data)
+  const handleClick = () => onSelectFile(file)
 
-  const handleDoubleClick = () => onFileView(data)
+  const handleDoubleClick = () => onFileView(file)
 
-  const selected = !!selectedFiles.find(item => item.id === data.id)
+  const selected = !!selectedFiles.find(item => item.id === file.id)
 
   return (
     <div
@@ -35,7 +35,7 @@ const File: FC<FileProps> = props => {
       className={classnames(`${prefixCls}-item`, { selected })}
     >
       <span className={`${prefixCls}-item-content`}>{child}</span>
-      <FileName maxWidth={width} file={data} />
+      <FileName maxWidth={width} file={file} />
     </div>
   )
 }

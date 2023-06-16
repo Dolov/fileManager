@@ -1,14 +1,15 @@
 import React, { FC } from 'react'
 import Icon, { IconsProps } from './Icons'
-import { getExt, useDomWidth, FileItemProps, prefixCls, classnames, StateContext, usePressKey } from './utils'
+import { transformType, useDomWidth, FileItemProps, prefixCls, classnames, StateContext, usePressKey } from './utils'
 
 export interface FileProps {
   data: FileItemProps
+  onFileView(file: FileItemProps): void
 }
 
 const File: FC<FileProps> = props => {
   const { onSelectFile, selectedFiles } = React.useContext(StateContext)
-  const { data } = props
+  const { data, onFileView } = props
   const { name, leaf } = data
   const { ref, width } = useDomWidth()
 
@@ -16,16 +17,23 @@ const File: FC<FileProps> = props => {
   let child = <Icon name="folder" size={iconWidth} />
 
   if (leaf) {
-    const ext = getExt(name) as IconsProps["name"]
+    const ext = transformType(name) as IconsProps["name"]
     child = <Icon name={ext} size={iconWidth} />
   }
 
   const handleClick = () => onSelectFile(data)
 
+  const handleDoubleClick = () => onFileView(data)
+
   const selected = !!selectedFiles.find(item => item.id === data.id)
 
   return (
-    <div onClick={handleClick} className={classnames(`${prefixCls}-item`, { selected })} ref={ref}>
+    <div
+      ref={ref}
+      onClick={handleClick}
+      onDoubleClick={handleDoubleClick}
+      className={classnames(`${prefixCls}-item`, { selected })}
+    >
       <span className={`${prefixCls}-item-content`}>{child}</span>
       <FileName maxWidth={width} file={data} />
     </div>
@@ -39,20 +47,26 @@ const FileName: React.FC<{
 }> = props => {
   const { file, maxWidth } = props
   const { name } = file
-  const { selectedFiles } = React.useContext(StateContext)
+  const { selectedFiles, onRename } = React.useContext(StateContext)
   const [editing, setEditing] = React.useState(false)
   const [fileName, setFileName] = React.useState(name)
   const widthRef = React.useRef<number>()
 
   const selected = !!selectedFiles.find(item => item.id === file.id)
 
-  const handleEdit = () => {
+  const toEditMode = () => {
+    if (!onRename) return
     if (!selected) return
     if (selectedFiles.length > 1) return
     setEditing(true)
   }
 
-  usePressKey('Enter', handleEdit, [selected])
+  const handleFileNameChange = (value: string) => {
+    onRename && onRename(file, value)
+    setFileName(value)
+  }
+
+  usePressKey('Enter', toEditMode, [selected])
 
   const getElement = (element: HTMLDivElement) => {
     if (!element) return
@@ -66,14 +80,14 @@ const FileName: React.FC<{
           file={file}
           width={widthRef.current!}
           onBlur={() => setEditing(false)}
-          onChange={setFileName}
+          onChange={handleFileNameChange}
           maxWidth={maxWidth}
         />
       )}
       <div
         ref={getElement}
         title={fileName}
-        onClick={handleEdit}
+        onClick={toEditMode}
         className={classnames(`${prefixCls}-item-name`, {
           'hidden': editing
         })}

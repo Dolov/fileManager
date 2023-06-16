@@ -15,10 +15,12 @@ export interface FileManagerProps {
 	data: FileItemProps[]
 	/** 展示几列 */
 	columns?: number
+
+	onRename?(file: FileItemProps, newName: string): void
 }
 
 const FileManager: FC<FileManagerProps> = props => {
-	const { columns = 7, data } = props
+	const { columns = 7, data, onRename } = props
 
 	const [selectedFiles, setSelectedFiles] = React.useState<FileItemProps[]>([])
 
@@ -38,6 +40,7 @@ const FileManager: FC<FileManagerProps> = props => {
 		return {
 			selectedFiles,
 			onSelectFile,
+			onRename,
 		}
 	}, [selectedFiles])
 

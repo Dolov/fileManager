@@ -131,12 +131,30 @@ const data: FileManagerProps["data"] = [
     name: 'readme.md',
     leaf: true,
   },
+  {
+    id: "121affbab2",
+    name: 'shisongyan.jpg',
+    leaf: true,
+    url: "https://dolov-upic.oss-cn-beijing.aliyuncs.com/friends.png?Expires=1686901925&OSSAccessKeyId=TMP.3Kea52ie84UYgTzB6bEeCHJMPk8ukBUSNH3kWG3ogg41Lx91K635aSfXBcwXJiC3yDes5jHgSBpwmGjGqgSp5pGKQLir3d&Signature=xdhB%2B5S5ISqBKp6UQlLZimKAn7w%3D"
+  },
+  {
+    id: "121affba12b2",
+    name: 'shisongy1an.jpg',
+    leaf: true,
+    url: "https://dolov-upic.oss-cn-beijing.aliyuncs.com/img2excel-favicon.png"
+  },
 ]
 
 const Demo: FC<DemoProps> = (props) => {
   const {  } = props
+  const [fileData, setFileData] = React.useState(data)
+
+  const onRename = (file, newName) => {
+
+  }
+
   return (
-    <FileManager data={data} />
+    <FileManager onRename={onRename} data={fileData} />
   )
 }
 

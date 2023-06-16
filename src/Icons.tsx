@@ -177,8 +177,34 @@ const Markdown = () => {
   )
 }
 
+const Image = () => {
+  return (
+    <svg width="1em" height="1em" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="bgGradient-image" gradientUnits="userSpaceOnUse" x1="15%" x2="85%" y1="15%" y2="85%">
+          <stop style={{ "stopColor": "rgb(58, 128, 224)", "stopOpacity": "1" }} offset="0%" />
+          <stop style={{ "stopColor": "rgb(58, 194, 224)", "stopOpacity": "1" }} offset="100%" />
+        </linearGradient>
+        <linearGradient id="bgGradient-image" gradientUnits="userSpaceOnUse" x1="15%" x2="85%" y1="15%" y2="85%">
+          <stop style={{ "stopColor": "rgb(58, 128, 224)", "stopOpacity": "1" }} offset="0%" />
+          <stop style={{ "stopColor": "rgb(58, 194, 224)", "stopOpacity": "1" }} offset="100%" />
+        </linearGradient>
+      </defs>
+      <path d="M844,1024H180C80.589,1024,0,943.411,0,844l0-664C0,80.589,80.589,0,180,0l664,0c99.411,0,180,80.589,180,180v664C1024,943.411,943.411,1024,844,1024z" fill="url(&quot;#bgGradient-image&quot;)" />
+      <svg className="StyledIconBase-ea9ulj-0 jZGNBW" width="610" fill="#F4F4F4" stroke="#000000" strokeOpacity="0" strokeWidth="0px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" x="207">
+        <g fill="#F4F4F4" stroke="#000000" strokeOpacity="0" strokeWidth="0px" data-name="Layer 2">
+          <g fill="#F4F4F4" stroke="#000000" strokeOpacity="0" strokeWidth="0px" data-name="image">
+            <path d="M18 3H6a3 3 0 00-3 3v12a3 3 0 003 3h12a3 3 0 003-3V6a3 3 0 00-3-3zM6 5h12a1 1 0 011 1v8.36l-3.2-2.73a2.77 2.77 0 00-3.52 0L5 17.7V6a1 1 0 011-1z" fill="#F4F4F4" stroke="#000000" strokeOpacity="0" strokeWidth="0px" />
+            <circle cx="8" cy="8.5" fill="#F4F4F4" r="1.5" stroke="#000000" strokeOpacity="0" strokeWidth="0px" />
+          </g>
+        </g>
+      </svg>
+    </svg>
+  )
+}
+
 export interface IconsProps {
-  name: 'folder' | 'excel' | 'xls' | 'xlsx' | 'word' | 'doc' | 'docx' | 'js' | 'ts' | 'jsx' | 'tsx' | 'gitignore' | 'md'
+  name: 'folder' | 'excel' | 'xls' | 'xlsx' | 'word' | 'doc' | 'docx' | 'js' | 'ts' | 'jsx' | 'tsx' | 'gitignore' | 'md' | 'image'
   size?: number
   width?: number | string
 }
@@ -197,6 +223,7 @@ const iconMap = {
   tsx: Jsx,
   gitignore: Git,
   md: Markdown,
+  image: Image,
 }
 
 const Icons: FC<IconsProps> = props => {

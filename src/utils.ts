@@ -5,6 +5,7 @@ export const prefixCls = 'doraa-file-manager'
 
 export interface FileItemProps {
 	id: string
+	url: string
 	name: string
 	leaf: boolean
 	children?: FileItemProps[]
@@ -63,6 +64,7 @@ export const classnames = (...args: any[]) => {
 export const StateContext = React.createContext<{
 	selectedFiles: FileItemProps[]
 	onSelectFile(file: FileItemProps): void
+	onRename?(file: FileItemProps, newName: string): void
 }>({
 	selectedFiles: [],
 	onSelectFile() {},
@@ -87,4 +89,14 @@ export const usePressKey = (keyName: string, fn: () => void, deps: any[]) => {
 			document.removeEventListener('keypress', callback)
 		}
 	}, deps)
+}
+
+
+export const imgTypes = ['jpeg', 'jpg', 'png', 'gif', 'bmp', 'webp', 'svg', 'svgz']
+
+export const transformType = (name: string) => {
+	const ext = getExt(name)
+	if (!ext) return 'unknow'
+	if (imgTypes.includes(ext)) return 'image'
+	return ext
 }

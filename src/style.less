@@ -1,7 +1,15 @@
 
 @prefixCls: doraa-file-manager;
+@primaryColor: #1890ff;
+@nameTop: 3px;
+@nameRadius: 3px;
 
 .@{prefixCls} {
+
+  .hidden {
+    visibility: hidden;
+  }
+
   .flex-center {
     display: flex;
     align-items: center;
@@ -28,7 +36,6 @@
     flex-direction: column;
     align-items: center;
     cursor: pointer;
-    overflow: hidden;
 
     &-content {
       padding: 16px;
@@ -37,11 +44,34 @@
 
     &-name {
       .ellipsis();
+      padding: 2px 8px;
       text-align: center;
       font-size: 12px;
-      margin-top: 3px;
-      padding: 2px 8px;
-      border-radius: 3px;
+      border-radius: @nameRadius;
+      margin-top: @nameTop;
+    }
+
+    &-name-input {
+      position: relative;
+      justify-content: center;
+      display: flex;
+      width: 100%;
+      > textarea {
+        margin-top: @nameTop;
+        position: absolute;
+        resize: none;
+        font-size: 12px;
+        border: none;
+        text-align: center;
+        ::selection {
+          color: #fff;
+          background: #007bff; /* 高亮背景色 */
+        }
+        ::-webkit-selection {
+          color: #fff;
+          background: #007bff; /* 高亮背景色 */
+        }
+      }
     }
 
     &.selected &-content {
@@ -49,8 +79,8 @@
     }
 
     &.selected &-name {
-      background: #1890ff;
       color: white;
+      background: @primaryColor;
     }
   }
 }

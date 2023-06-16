@@ -73,3 +73,18 @@ export const ConfigContext = React.createContext<{
 }>({
 
 })
+
+
+export const usePressKey = (keyName: string, fn: () => void, deps: any[]) => {
+	const callback = React.useCallback((e: KeyboardEvent) => {
+		if (e.key !== keyName) return
+		fn()
+	}, deps)
+
+	React.useEffect(() => {
+		document.addEventListener('keypress', callback)
+		return () => {
+			document.removeEventListener('keypress', callback)
+		}
+	}, deps)
+}

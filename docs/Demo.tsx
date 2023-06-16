@@ -1,6 +1,6 @@
 import React, { FC } from 'react'
-import FileManager from 'file-manager';
-import type { FileManagerProps } from 'file-manager'
+import FileManager from 'react-file-manager';
+import type { FileManagerProps } from 'react-file-manager'
 
 
 export interface DemoProps {
@@ -119,6 +119,16 @@ const data: FileManagerProps["data"] = [
   {
     id: "121a21baaffaafdfafabab2",
     name: '会议纪要8.ts',
+    leaf: true,
+  },
+  {
+    id: "121a21baaffaafdfafa12bab2",
+    name: '.gitignore',
+    leaf: true,
+  },
+  {
+    id: "121a21baaffbab2",
+    name: 'readme.md',
     leaf: true,
   },
 ]

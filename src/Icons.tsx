@@ -89,6 +89,27 @@ const Js = () => {
   )
 }
 
+const Git = () => {
+  return (
+    <svg width="1em" height="1em" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="bgGradient-git" gradientUnits="userSpaceOnUse" x1="15%" x2="85%" y1="15%" y2="85%">
+          <stop style={{ "stopColor": "rgb(240, 80, 50)", "stopOpacity": "1" }} offset="0%" />
+          <stop style={{ "stopColor": "rgb(240, 50, 96)", "stopOpacity": "1" }} offset="100%" />
+        </linearGradient>
+        <linearGradient id="bgGradient-git" gradientUnits="userSpaceOnUse" x1="15%" x2="85%" y1="15%" y2="85%">
+          <stop style={{ "stopColor": "rgb(240, 80, 50)", "stopOpacity": "1" }} offset="0%" />
+          <stop style={{ "stopColor": "rgb(240, 50, 96)", "stopOpacity": "1" }} offset="100%" />
+        </linearGradient>
+      </defs>
+      <path d="M844,1024H180C80.589,1024,0,943.411,0,844l0-664C0,80.589,80.589,0,180,0l664,0c99.411,0,180,80.589,180,180v664C1024,943.411,943.411,1024,844,1024z" fill="url(&quot;#bgGradient-git&quot;)" />
+      <svg className="StyledIconBase-ea9ulj-0 jZGNBW" width="610" fill="#F4F4F4" stroke="#000000" strokeOpacity="0" strokeWidth="0px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" x="207">
+        <path d="M21.62 11.108l-8.731-8.729a1.292 1.292 0 00-1.823 0L9.257 4.19l2.299 2.3a1.532 1.532 0 011.939 1.95l2.214 2.217a1.53 1.53 0 011.583 2.531c-.599.6-1.566.6-2.166 0a1.536 1.536 0 01-.337-1.662l-2.074-2.063V14.9c.146.071.286.169.407.29a1.537 1.537 0 010 2.166 1.536 1.536 0 01-2.174 0 1.528 1.528 0 010-2.164c.152-.15.322-.264.504-.339v-5.49a1.529 1.529 0 01-.83-2.008l-2.26-2.271-5.987 5.982c-.5.504-.5 1.32 0 1.824l8.731 8.729a1.286 1.286 0 001.821 0l8.69-8.689a1.284 1.284 0 00.003-1.822" fill="#F4F4F4" stroke="#000000" strokeOpacity="0" strokeWidth="0px" />
+      </svg>
+    </svg>
+  )
+}
+
 const Ts = () => {
   return (
     <svg width="1em" height="1em" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
@@ -135,8 +156,29 @@ const Jsx = () => {
   )
 }
 
+const Markdown = () => {
+  return (
+    <svg width="1em" height="1em" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="bgGradient-logo-markdown" gradientUnits="userSpaceOnUse" x1="15%" x2="85%" y1="15%" y2="85%">
+          <stop style={{ "stopColor": "rgb(185, 59, 135)", "stopOpacity": "1" }} offset="0%" />
+          <stop style={{ "stopColor": "rgb(185, 59, 185)", "stopOpacity": "1" }} offset="100%" />
+        </linearGradient>
+        <linearGradient id="bgGradient-logo-markdown" gradientUnits="userSpaceOnUse" x1="15%" x2="85%" y1="15%" y2="85%">
+          <stop style={{ "stopColor": "rgb(185, 59, 135)", "stopOpacity": "1" }} offset="0%" />
+          <stop style={{ "stopColor": "rgb(185, 59, 185)", "stopOpacity": "1" }} offset="100%" />
+        </linearGradient>
+      </defs>
+      <path d="M844,1024H180C80.589,1024,0,943.411,0,844l0-664C0,80.589,80.589,0,180,0l664,0c99.411,0,180,80.589,180,180v664C1024,943.411,943.411,1024,844,1024z" fill="url(&quot;#bgGradient-logo-markdown&quot;)" />
+      <svg className="StyledIconBase-ea9ulj-0 jZGNBW" width="610" fill="#F4F4F4" stroke="#000000" strokeOpacity="0" strokeWidth="0px" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" x="207">
+        <path d="M475 64H37C16.58 64 0 81.38 0 102.77v306.42C0 430.59 16.58 448 37 448h438c20.38 0 37-17.41 37-38.81V102.77C512 81.38 495.42 64 475 64zM288 368h-64V256l-48 64-48-64v112H64V144h64l48 80 48-80h64zm96 0l-80-112h48.05L352 144h64v112h48z" fill="#F4F4F4" stroke="#000000" strokeOpacity="0" strokeWidth="0px" />
+      </svg>
+    </svg>
+  )
+}
+
 export interface IconsProps {
-  name: 'folder' | 'excel' | 'xls' | 'xlsx' | 'word' | 'doc' | 'docx' | 'js' | 'ts' | 'jsx' | 'tsx'
+  name: 'folder' | 'excel' | 'xls' | 'xlsx' | 'word' | 'doc' | 'docx' | 'js' | 'ts' | 'jsx' | 'tsx' | 'gitignore' | 'md'
   size?: number
   width?: number | string
 }
@@ -153,6 +195,8 @@ const iconMap = {
   ts: Ts,
   jsx: Jsx,
   tsx: Jsx,
+  gitignore: Git,
+  md: Markdown,
 }
 
 const Icons: FC<IconsProps> = props => {

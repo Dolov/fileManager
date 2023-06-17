@@ -5,10 +5,11 @@ import FileViewer from './Viewers/index'
 
 export interface ContentProps {
   data: FileItemProps[]
+  onEnterNextDir(file: FileItemProps): void
 }
 
 const Content: FC<ContentProps> = (props) => {
-  const { data } = props
+  const { data, onEnterNextDir } = props
 
   const [files, setFiles] = React.useState(data)
   const fileViewerRef = React.useRef<ViewerRefProps>(null)
@@ -17,6 +18,7 @@ const Content: FC<ContentProps> = (props) => {
     /** 点击了文件夹 */
     if (!file.leaf) {
       setFiles(file.children!)
+      onEnterNextDir(file)
       return
     }
     if (!fileViewerRef.current) return

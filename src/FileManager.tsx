@@ -21,6 +21,7 @@ export interface FileManagerProps {
 
 const FileManager: FC<FileManagerProps> = props => {
 	const { columns = 7, data, onRename } = props
+	const [dirStack, setDirStack] = React.useState<FileItemProps[]>([])
 
 	const [selectedFiles, setSelectedFiles] = React.useState<FileItemProps[]>([])
 
@@ -36,6 +37,13 @@ const FileManager: FC<FileManagerProps> = props => {
 		setSelectedFiles([file])
 	}
 
+	const onEnterNextDir = (file: FileItemProps) => {
+		setDirStack([
+			...dirStack,
+			file
+		])
+	}
+
 	const stateContextValue = React.useMemo(() => {
 		return {
 			selectedFiles,
@@ -47,8 +55,8 @@ const FileManager: FC<FileManagerProps> = props => {
 	return (
 		<StateContext.Provider value={stateContextValue}>
 			<div className={prefixCls} style={style}>
-				<HandlerBar />
-				<Content data={data} />
+				<HandlerBar dirStack={dirStack} />
+				<Content data={data} onEnterNextDir={onEnterNextDir} />
 			</div>
 		</StateContext.Provider>
 	)

@@ -28,6 +28,18 @@
     text-overflow: ellipsis; /* 超出部分显示省略号 */
   }
 
+  &-tag {
+    padding: 2px 10px;
+    background: rgba(0, 0, 0, 0.08);
+    border-radius: 16px;
+    color: rgba(0, 0, 0, 0.87);
+    cursor: pointer;
+  }
+
+  &-handler-bar {
+    padding: 12px 24px;
+  }
+
   &-content {
     display: grid;
     grid-template-columns: repeat(var(--columns), 1fr);

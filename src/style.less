@@ -10,6 +10,10 @@
 
 .@{prefixCls} {
 
+  &-icon {
+    display: inline-flex;
+    font-size: 18px;
+  }
   .hidden {
     visibility: hidden;
   }
@@ -34,10 +38,32 @@
     border-radius: 16px;
     color: rgba(0, 0, 0, 0.87);
     cursor: pointer;
+    margin-right: 12px;
   }
 
   &-handler-bar {
-    padding: 12px 24px;
+    padding: 12px 16px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    margin-bottom: 12px;
+    display: flex;
+    &-left {
+      .flex-center;
+      justify-content: space-between;
+    }
+    &-prev, &-next {
+      cursor: pointer;
+      font-size: 20px;
+      padding: 4px 8px;
+      border-radius: 3px;
+      &:hover {
+        background: rgba(0, 0, 0, 0.08);
+      }
+    }
+
+    &-dir-name {
+      margin-left: 24px;
+      font-weight: bold;
+    }
   }
 
   &-content {

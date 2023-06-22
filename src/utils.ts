@@ -29,7 +29,7 @@ export const useDomWidth = () => {
 				setWidth(width)
 			}
 		});
-		
+
 		observer.observe(element);
 
 		return () => {
@@ -37,7 +37,7 @@ export const useDomWidth = () => {
 			observer.disconnect();
 		}
 	}, [ref.current])
-	
+
 	return { ref, width }
 }
 
@@ -52,13 +52,16 @@ export const getExt = (name: string) => {
 export const classnames = (...args: any[]) => {
 	let classnameStr = ''
 	args.forEach(item => {
+		if (classnameStr !== '') {
+			classnameStr += ' '
+		}
 		if (typeof item === 'string') {
-			classnameStr += ` ${item}`
+			classnameStr += `${item}`
 		}
 		if (item && typeof item === 'object') {
 			Object.keys(item).forEach(className => {
 				if (item[className]) {
-					classnameStr += ` ${className}`
+					classnameStr += `${className}`
 				}
 			})
 		}
@@ -71,8 +74,8 @@ export const StateContext = React.createContext<{
 	onSelectFile(file: FileItemProps): void
 	onRename?(file: FileItemProps, newName: string): void
 }>({
+	onSelectFile() { },
 	selectedFiles: [],
-	onSelectFile() {},
 })
 
 export const ConfigContext = React.createContext<{
@@ -117,4 +120,21 @@ export const getFileViewType = (name: string) => {
 
 	const textType = ['gitignore']
 	if (textType.includes(ext)) return 'text'
+}
+
+export const getTheParent = (
+	item: FileItemProps, treeData: FileItemProps[], parent?: FileItemProps
+): FileItemProps | undefined => {
+	if (!item) return
+	for (let index = 0; index < treeData.length; index++) {
+		const { id, children } = treeData[index];
+		if (id === item.id) {
+			// @ts-ignore
+			return parent || { children: treeData }
+		}
+		const parentNode = getTheParent(item, children!, treeData[index])
+		if (parentNode) {
+			return parentNode
+		}
+	}
 }

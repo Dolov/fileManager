@@ -1,4 +1,5 @@
 import React, { FC } from 'react'
+import { classnames, prefixCls } from './utils'
 
 const Folder: React.FC<{
 }> = props => {
@@ -203,10 +204,29 @@ const Image = () => {
   )
 }
 
+const ArrowLeft = () => {
+  return (
+    <svg width="1em" height="1em" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+      <path d="M384 512L731.733333 202.666667c17.066667-14.933333 19.2-42.666667 4.266667-59.733334-14.933333-17.066667-42.666667-19.2-59.733333-4.266666l-384 341.333333c-10.666667 8.533333-14.933333 19.2-14.933334 32s4.266667 23.466667 14.933334 32l384 341.333333c8.533333 6.4 19.2 10.666667 27.733333 10.666667 12.8 0 23.466667-4.266667 32-14.933333 14.933333-17.066667 14.933333-44.8-4.266667-59.733334L384 512z" fill="#666666"/>
+    </svg>
+  )
+}
+
+const ArrowRight = () => {
+  return (
+    <svg width="1em" height="1em" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+      <path d="M731.733333 480l-384-341.333333c-17.066667-14.933333-44.8-14.933333-59.733333 4.266666-14.933333 17.066667-14.933333 44.8 4.266667 59.733334L640 512 292.266667 821.333333c-17.066667 14.933333-19.2 42.666667-4.266667 59.733334 8.533333 8.533333 19.2 14.933333 32 14.933333 10.666667 0 19.2-4.266667 27.733333-10.666667l384-341.333333c8.533333-8.533333 14.933333-19.2 14.933334-32s-4.266667-23.466667-14.933334-32z" fill="#666666"/>
+    </svg>
+  )
+}
+
 export interface IconsProps {
-  name: 'folder' | 'excel' | 'xls' | 'xlsx' | 'word' | 'doc' | 'docx' | 'js' | 'ts' | 'jsx' | 'tsx' | 'gitignore' | 'markdown' | 'image'
+  name: 'folder' | 'excel' | 'xls' | 'xlsx' | 'word' | 'doc' | 'docx' | 'js' | 'ts' | 'jsx' | 'tsx' | 'gitignore' | 'markdown' | 'image' | 'left' | 'right'
   size?: number
   width?: number | string
+  className?: string
+  style?: React.CSSProperties
+  onClick?(): void
 }
 
 const iconMap = {
@@ -224,14 +244,20 @@ const iconMap = {
   gitignore: Git,
   markdown: Markdown,
   image: Image,
+  left: ArrowLeft,
+  right: ArrowRight
 }
 
 const Icons: FC<IconsProps> = props => {
-  const { name, width, size = 18 } = props
+  const { name, width, size, className, style, onClick = () => {} } = props
 
   const MatchIcon = iconMap[name] || (() => null)
   return (
-    <span style={{ fontSize: size }} className="flex-center">
+    <span
+      style={{ fontSize: size, ...style }}
+      onClick={onClick}
+      className={classnames(`${prefixCls}-icon`, className)}
+    >
       <MatchIcon />
     </span>
   )

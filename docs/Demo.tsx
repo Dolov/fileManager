@@ -14,6 +14,19 @@ const data: FileManagerProps["data"] = [
     leaf: false,
     children: [
       {
+        id: "sfa",
+        name: '使用说明',
+        leaf: false,
+        children: [
+          {
+            name: 'reac12t使用说12明.md',
+            leaf: true,
+            id: "123adfa",
+            url: "https://dolov-upic.oss-cn-beijing.aliyuncs.com/README.md"
+          },
+        ]
+      },
+      {
         name: 'reac12t使用说明.md',
         leaf: true,
         url: "https://dolov-upic.oss-cn-beijing.aliyuncs.com/README.md"

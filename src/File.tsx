@@ -8,7 +8,7 @@ export interface FileProps {
 }
 
 const File: FC<FileProps> = props => {
-  const { onSelectFile, selectedFiles, managerId } = React.useContext(StateContext)
+  const { onSelectFile, selectedFiles, managerId, FileIcon = Icon } = React.useContext(StateContext)
   const { file, onFileView } = props
   const { name, leaf } = file
   const { ref, width } = useDomWidth()
@@ -17,7 +17,7 @@ const File: FC<FileProps> = props => {
   const ext = transformType(name) as IconsProps["name"]
   const iconName = leaf ? ext: "folder"
 
-  const child = <Icon name={iconName} size={iconWidth} className="flex-center" />
+  const child = <FileIcon name={iconName} size={iconWidth} />
 
   const handleClick = () => onSelectFile(file)
 

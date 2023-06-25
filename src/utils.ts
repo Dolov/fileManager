@@ -69,12 +69,15 @@ export const classnames = (...args: any[]) => {
 	return classnameStr
 }
 
-export const StateContext = React.createContext<{
-	selectedFiles: FileItemProps[]
-	onSelectFile(file: FileItemProps): void
-	onRename?(file: FileItemProps, newName: string): void
+export interface StateContextProps {
 	managerId: number,
-}>({
+	onSelectFile(file: FileItemProps): void
+	selectedFiles: FileItemProps[]
+	onRename?(file: FileItemProps, newName: string): void
+	FileIcon?: React.FC<{name: string, size: number, [key: string]: any}>
+}
+
+export const StateContext = React.createContext<StateContextProps>({
 	managerId: 0,
 	onSelectFile() { },
 	selectedFiles: [],
@@ -134,15 +137,18 @@ export const useKey = (keyName: string) => {
 	return isDownRef
 }
 
-export const imgTypes = ['jpeg', 'jpg', 'png', 'gif', 'bmp', 'webp', 'svg', 'svgz']
-
 export const mdTypes = ['markdown', 'md']
+export const imgTypes = ['jpeg', 'jpg', 'png', 'gif', 'bmp', 'webp', 'svg', 'svgz']
+export const wordTypes = ['doc', 'docx']
+export const excelTypes = ['xls', 'xlsx']
 
 export const transformType = (name: string) => {
 	const ext = getExt(name)
 	if (!ext) return 'unknow'
 	if (mdTypes.includes(ext)) return 'markdown'
 	if (imgTypes.includes(ext)) return 'image'
+	if (wordTypes.includes(ext)) return 'word'
+	if (excelTypes.includes(ext)) return 'excel'
 	return ext
 }
 
@@ -160,6 +166,7 @@ export const getTheParent = (
 	item: FileItemProps, treeData: FileItemProps[], parent?: FileItemProps
 ): FileItemProps | undefined => {
 	if (!item) return
+	if (!Array.isArray(treeData)) return
 	for (let index = 0; index < treeData.length; index++) {
 		const { id, children } = treeData[index];
 		if (id === item.id) {

@@ -220,22 +220,43 @@ const ArrowRight = () => {
   )
 }
 
-export interface IconsProps {
-  name: 'folder' | 'excel' | 'xls' | 'xlsx' | 'word' | 'doc' | 'docx' | 'js' | 'ts' | 'jsx' | 'tsx' | 'gitignore' | 'markdown' | 'image' | 'left' | 'right'
-  size?: number
-  width?: number | string
-  className?: string
-  style?: React.CSSProperties
-  onClick?(): void
+
+const Zip = () => {
+  return (
+    <svg width="1em" height="1em" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="bgGradient-file-earmark-zip" gradientUnits="userSpaceOnUse" x1="15%" x2="85%" y1="15%" y2="85%">
+          <stop style={{"stopColor":"rgb(17, 46, 94)","stopOpacity":"1"}} offset="0%"/>
+          <stop style={{"stopColor":"rgb(17, 77, 94)","stopOpacity":"1"}} offset="100%"/>
+        </linearGradient>
+        <linearGradient id="bgGradient-file-earmark-zip" gradientUnits="userSpaceOnUse" x1="15%" x2="85%" y1="15%" y2="85%">
+          <stop style={{"stopColor":"rgb(17, 46, 94)","stopOpacity":"1"}} offset="0%"/>
+          <stop style={{"stopColor":"rgb(17, 77, 94)","stopOpacity":"1"}} offset="100%"/>
+        </linearGradient>
+      </defs>
+      <path d="M844,1024H180C80.589,1024,0,943.411,0,844l0-664C0,80.589,80.589,0,180,0l664,0c99.411,0,180,80.589,180,180v664C1024,943.411,943.411,1024,844,1024z" fill="url(&quot;#bgGradient-file-earmark-zip&quot;)"/>
+      <svg className="StyledIconBase-ea9ulj-0 jZGNBW" width="610" fill="#F4F4F4" stroke="#000000" strokeOpacity="0" strokeWidth="0px" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" x="207">
+        <path d="M4 0h5.5v1H4a1 1 0 00-1 1v12a1 1 0 001 1h8a1 1 0 001-1V4.5h1V14a2 2 0 01-2 2H4a2 2 0 01-2-2V2a2 2 0 012-2z" fill="#F4F4F4" stroke="#000000" strokeOpacity="0" strokeWidth="0px"/>
+        <path d="M9.5 3V0L14 4.5h-3A1.5 1.5 0 019.5 3z" fill="#F4F4F4" stroke="#000000" strokeOpacity="0" strokeWidth="0px"/>
+        <path d="M5 7.5a1 1 0 011-1h1a1 1 0 011 1v.938l.4 1.599a1 1 0 01-.416 1.074l-.93.62a1 1 0 01-1.11 0l-.929-.62a1 1 0 01-.415-1.074L5 8.438V7.5zm2 0H6v.938a1 1 0 01-.03.243l-.4 1.598.93.62.929-.62-.4-1.598A1 1 0 017 8.438V7.5z" fill="#F4F4F4" fillRule="evenodd" stroke="#000000" strokeOpacity="0" strokeWidth="0px"/>
+        <path d="M6 1h1.5v1H6zM5 2h1.5v1H5zm1 1h1.5v1H6zM5 4h1.5v1H5zm1 1h1.5v1H6V5z" fill="#F4F4F4" stroke="#000000" strokeOpacity="0" strokeWidth="0px"/>
+      </svg>
+    </svg>
+  )
 }
 
-const iconMap = {
+export interface IconsProps {
+  name: 'folder' | 'excel' | 'word' | 'js' | 'ts' | 'jsx' | 'tsx' | 'gitignore' | 'markdown' | 'image' | 'left' | 'right' | 'zip'
+  size?: number
+  width?: number | string
+  style?: React.CSSProperties
+  onClick?(): void
+  className?: string
+}
+
+export const iconMap: Record<IconsProps["name"], React.FC> = {
   folder: Folder,
-  xls: Excel,
-  xlsx: Excel,
   excel: Excel,
-  doc: Word,
-  docx: Word,
   word: Word,
   js: Js,
   ts: Ts,
@@ -245,11 +266,12 @@ const iconMap = {
   markdown: Markdown,
   image: Image,
   left: ArrowLeft,
-  right: ArrowRight
+  right: ArrowRight,
+  zip: Zip,
 }
 
 const Icons: FC<IconsProps> = props => {
-  const { name, width, size, className, style, onClick = () => {} } = props
+  const { name, size, className, style, onClick = () => {} } = props
 
   const MatchIcon = iconMap[name] || (() => null)
   return (

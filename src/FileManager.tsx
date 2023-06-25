@@ -1,6 +1,6 @@
 import React, { FC } from 'react'
-import HandlerBar, { HandlerBarRefProps } from './HandlerBar'
-import { prefixCls, FileItemProps, StateContext, useKey, usePressKey, getTargetElement } from './utils'
+import HandlerBar from './HandlerBar'
+import { prefixCls, FileItemProps, StateContext, StateContextProps, useKey, usePressKey, getTargetElement } from './utils'
 import Content from './Content'
 
 import './style.less'
@@ -18,11 +18,12 @@ export interface FileManagerProps {
 
 	onRename?(file: FileItemProps, newName: string): void
 	onDelete?(files: FileItemProps[]): void
+	FileIcon?: StateContextProps["FileIcon"]
 }
 
 const FileManager: FC<FileManagerProps> = props => {
 	
-	const { columns = 7, data, onRename, onDelete } = props
+	const { columns = 7, data, onRename, onDelete, FileIcon } = props
 
 	const isShift = useKey('Shift')
 	const managerId = React.useMemo(() => new Date().getTime(), [])
@@ -33,18 +34,19 @@ const FileManager: FC<FileManagerProps> = props => {
 
 	/** 点击在某些地方则认为是失去焦点，取消当前选中 */
 	const handleBlur = React.useCallback((e: MouseEvent) => {
+		if (selectedFiles.length === 0) return
 		const targetNode = e.target as unknown as Element
 		const node = getTargetElement(targetNode, managerId)
 		if (node) return
 		setSelectedFiles([])
-	}, [])
+	}, [selectedFiles])
 
 	React.useEffect(() => {
 		document.addEventListener('click', handleBlur)
 		return () => {
 			document.removeEventListener('click', handleBlur)
 		}
-	}, [])
+	}, [selectedFiles])
 
 	/** 全选 */
 	usePressKey("a", () => {
@@ -102,6 +104,7 @@ const FileManager: FC<FileManagerProps> = props => {
 	const stateContextValue = React.useMemo(() => {
 		return {
 			onRename,
+			FileIcon,
 			managerId,
 			onSelectFile,
 			selectedFiles,

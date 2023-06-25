@@ -1,7 +1,7 @@
 import React, { FC } from 'react'
 import ReactMarkdown from 'react-markdown'
 import ReactModal from 'react-modal';
-import { FileItemProps, ViewerRefProps, usePressKey } from '../utils'
+import { FileItemProps, ViewerRefProps } from '../utils'
 
 const customStyles = {
   content: {

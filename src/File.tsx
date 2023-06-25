@@ -8,7 +8,7 @@ export interface FileProps {
 }
 
 const File: FC<FileProps> = props => {
-  const { onSelectFile, selectedFiles } = React.useContext(StateContext)
+  const { onSelectFile, selectedFiles, managerId } = React.useContext(StateContext)
   const { file, onFileView } = props
   const { name, leaf } = file
   const { ref, width } = useDomWidth()
@@ -28,6 +28,7 @@ const File: FC<FileProps> = props => {
   return (
     <div
       ref={ref}
+      data-id={managerId}
       onClick={handleClick}
       onDoubleClick={handleDoubleClick}
       className={classnames(`${prefixCls}-item`, { selected })}
@@ -64,7 +65,9 @@ const FileName: React.FC<{
     setFileName(value)
   }
 
-  usePressKey('Enter', toEditMode, [selected])
+  usePressKey('Enter', toEditMode, {
+    deps: [selected]
+  })
 
   const getElement = (element: HTMLDivElement) => {
     if (!element) return

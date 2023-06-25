@@ -73,7 +73,9 @@ export const StateContext = React.createContext<{
 	selectedFiles: FileItemProps[]
 	onSelectFile(file: FileItemProps): void
 	onRename?(file: FileItemProps, newName: string): void
+	managerId: number,
 }>({
+	managerId: 0,
 	onSelectFile() { },
 	selectedFiles: [],
 })
@@ -85,10 +87,19 @@ export const ConfigContext = React.createContext<{
 })
 
 
-export const usePressKey = (keyName: string, fn: () => void, deps: any[]) => {
+export const usePressKey = (keyName: string, fn: () => void, options?: {
+	deps?: any[]
+	metaKey?: boolean
+	preventDefault?: boolean
+}) => {
+	const { metaKey, deps = [], preventDefault } = options || {}
 	const callback = React.useCallback((e: KeyboardEvent) => {
 		if (e.key !== keyName) return
+		if (metaKey && !e.metaKey) return
 		fn()
+		if (preventDefault) {
+			e.preventDefault()
+		}
 	}, deps)
 
 	React.useEffect(() => {
@@ -99,6 +110,29 @@ export const usePressKey = (keyName: string, fn: () => void, deps: any[]) => {
 	}, deps)
 }
 
+export const useKey = (keyName: string) => {
+	const isDownRef = React.useRef(false)
+
+	const downCallback = React.useCallback((e: KeyboardEvent) => {
+		if (e.key !== keyName) return
+		isDownRef.current = true
+	}, [])
+
+	const upCallback = React.useCallback((e: KeyboardEvent) => {
+		if (e.key !== keyName) return
+		isDownRef.current = false
+	}, [])
+
+	React.useEffect(() => {
+		document.addEventListener('keydown', downCallback)
+		document.addEventListener('keyup', upCallback)
+		return () => {
+			document.removeEventListener('keydown', downCallback)
+			document.removeEventListener('keyup', upCallback)
+		}
+	}, [])
+	return isDownRef
+}
 
 export const imgTypes = ['jpeg', 'jpg', 'png', 'gif', 'bmp', 'webp', 'svg', 'svgz']
 
@@ -137,4 +171,16 @@ export const getTheParent = (
 			return parentNode
 		}
 	}
+}
+
+export const getTargetElement = (dom: Element, id: number): Element | null => {
+	if (!dom) return null
+	const dataId = dom.getAttribute('data-id')
+	if (dataId === `${id}`) return dom
+	const parent = dom.parentElement
+	if (parent) {
+		const node = getTargetElement(parent, id)
+		if (node) return node
+	}
+	return null
 }

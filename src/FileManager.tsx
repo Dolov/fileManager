@@ -22,7 +22,6 @@ export interface FileManagerProps {
 const FileManager: FC<FileManagerProps> = props => {
 	const { columns = 7, data, onRename } = props
 
-	const handlerBarRef = React.useRef<HandlerBarRefProps>(null)
 	const [dirStack, setDirStack] = React.useState<FileItemProps[]>([])
 	const [currentLevel, setCurrentLevel] = React.useState(0)
 	const [currentDirFiles, setCurrentDirFiles] = React.useState<FileItemProps[]>(data)
@@ -36,6 +35,7 @@ const FileManager: FC<FileManagerProps> = props => {
 	}, [columns])
 
 	const enterTheDir = (file: FileItemProps) => {
+		if (!file) return
 		setCurrentDirFiles(file.children!)
 	}
 
@@ -64,12 +64,17 @@ const FileManager: FC<FileManagerProps> = props => {
 		<StateContext.Provider value={stateContextValue}>
 			<div className={prefixCls} style={style}>
 				<HandlerBar
-					ref={handlerBarRef}
 					data={data}
+					level={currentLevel}
 					dirStack={dirStack}
 					enterTheDir={enterTheDir}
+					onLevelChange={setCurrentLevel}
 				/>
-				<Content level={currentLevel} files={currentDirFiles} onEnterNextDir={onEnterNextDir} />
+				<Content
+					level={currentLevel}
+					files={currentDirFiles}
+					onEnterNextDir={onEnterNextDir}
+				/>
 			</div>
 		</StateContext.Provider>
 	)

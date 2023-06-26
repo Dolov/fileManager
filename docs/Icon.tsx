@@ -7,7 +7,7 @@ export interface IconProps {
 
 const style: React.CSSProperties = {
   margin: 12,
-  fontSize: 30,
+  fontSize: 60,
 }
 
 const Icon: FC<IconProps> = (props) => {

@@ -13,11 +13,11 @@ const File: FC<FileProps> = props => {
   const { name, leaf } = file
   const { ref, width } = useDomWidth()
 
-  const iconWidth = width! * 0.7
   const ext = transformType(name) as IconsProps["name"]
+  const iconWidth = width! * 0.7
   const iconName = leaf ? ext: "folder"
 
-  const child = <FileIcon name={iconName} size={iconWidth} />
+  const child = <FileIcon name={iconName} size={iconWidth} className="flex-center" />
 
   const handleClick = () => onSelectFile(file)
 

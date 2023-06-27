@@ -8,6 +8,8 @@ export interface FileItemProps {
 	url: string
 	name: string
 	leaf: boolean
+	status?: "success" | "error" | "uploading"
+	progress?: number
 	children?: FileItemProps[]
 }
 
@@ -75,6 +77,7 @@ export interface StateContextProps {
 	selectedFiles: FileItemProps[]
 	onRename?(file: FileItemProps, newName: string): void
 	FileIcon?: React.FC<{name: string, size: number, [key: string]: any}>
+	loadingColor?: string
 }
 
 export const StateContext = React.createContext<StateContextProps>({

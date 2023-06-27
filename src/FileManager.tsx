@@ -24,12 +24,13 @@ export interface FileManagerProps extends Omit<UploadProps, 'onChange'> {
 	onUpload?(file: File): void
 	FileIcon?: StateContextProps["FileIcon"]
 	onCreateDir?(dirName: string): void
+	loadingColor?: string;
 }
 
 const FileManager: FC<FileManagerProps> = props => {
 	
 	const {
-		columns = 7, data, FileIcon,
+		columns = 7, loadingColor = "gray", data, FileIcon,
 		onRename, onDelete, onUpload, uploadUrl, uploadParams,
 	} = props
 
@@ -153,6 +154,7 @@ const FileManager: FC<FileManagerProps> = props => {
 			onRename,
 			FileIcon,
 			managerId,
+			loadingColor,
 			onSelectFile,
 			selectedFiles,
 		}

@@ -26,13 +26,10 @@ const Upload: FC<UploadProps> = props => {
 
   const elementRef = React.useRef<HTMLDivElement>(null)
   const onDragEnter: React.DragEventHandler<HTMLDivElement> = e => {
-    elementRef.current?.classList.add('dragging')
-    elementRef.current?.classList.remove('uploading')
   }
 
   const onDragLeave: React.DragEventHandler<HTMLDivElement> = e => {
     if (e.target !== elementRef.current) return
-    elementRef.current?.classList.remove('dragging')
     e.preventDefault();
   }
 
@@ -76,22 +73,20 @@ const Upload: FC<UploadProps> = props => {
 
     xhr.onreadystatechange = function() {
       if (xhr.readyState!== 4) return
-      elementRef.current?.classList.remove('dragging')
-      elementRef.current?.classList.remove('uploading')
       if (xhr.status === 200) {
         onChange({
           ...uploadStateRef.current[id],
           progress: 100,
           status: 'success'
         })
+        return
       }
-      if (xhr.status !== 200) {
-        onChange({
-          ...uploadStateRef.current[id],
-          progress: 0,
-          status: 'error'
-        })
-      }
+      onChange({
+        ...uploadStateRef.current[id],
+        progress: 0,
+        status: 'error'
+      })
+      delete uploadStateRef.current[id]
     };
     xhr.send(formData);
     onChange({
@@ -103,7 +98,6 @@ const Upload: FC<UploadProps> = props => {
 
   const onDrop: React.DragEventHandler<HTMLDivElement> = e => {
     e.preventDefault();
-    elementRef.current?.classList.add('uploading')
     const files = e.dataTransfer.files;
     Array.from(files).forEach(file => {
       upload(file)

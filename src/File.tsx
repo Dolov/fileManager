@@ -8,9 +8,9 @@ export interface FileProps {
 }
 
 const File: FC<FileProps> = props => {
-  const { onSelectFile, selectedFiles, managerId, FileIcon = Icon } = React.useContext(StateContext)
+  const { onSelectFile, selectedFiles, managerId, FileIcon = Icon, loadingColor } = React.useContext(StateContext)
   const { file, onFileView } = props
-  const { name, leaf } = file
+  const { name, leaf, progress, status } = file
   const { ref, width } = useDomWidth()
 
   const ext = transformType(name) as IconsProps["name"]
@@ -25,6 +25,8 @@ const File: FC<FileProps> = props => {
 
   const selected = !!selectedFiles.find(item => item.id === file.id)
 
+  const uploading = status === 'uploading'
+
   return (
     <div
       ref={ref}
@@ -33,7 +35,17 @@ const File: FC<FileProps> = props => {
       onDoubleClick={handleDoubleClick}
       className={classnames(`${prefixCls}-item`, { selected })}
     >
-      <span className={`${prefixCls}-item-content`}>{child}</span>
+      <span className={`${prefixCls}-item-content`}>
+        {uploading && (
+          <Icon name="loading" className={`${prefixCls}-item-loading`} size={iconWidth} color={loadingColor} />
+        )}
+        {uploading && (
+          <span className={`${prefixCls}-item-progress`}>
+            <span>{progress}</span>
+          </span>
+        )}
+        {child}
+      </span>
       <FileName maxWidth={width} file={file} />
     </div>
   )

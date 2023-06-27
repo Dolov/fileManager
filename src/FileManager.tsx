@@ -4,6 +4,7 @@ import { prefixCls, FileItemProps, StateContext, StateContextProps, useKey, useP
 import Content from './Content'
 import ContextMenu, { ContextMenuProps } from './components/ContextMenu'
 import UploadContainer, { UploadProps } from './components/Upload'
+import useRefState from './hooks/useRefState'
 
 import './style.less'
 
@@ -37,7 +38,7 @@ const FileManager: FC<FileManagerProps> = props => {
 	const [dirStack, setDirStack] = React.useState<FileItemProps[]>([])
 	const [currentLevel, setCurrentLevel] = React.useState(0)
 	const [selectedFiles, setSelectedFiles] = React.useState<FileItemProps[]>([])
-	const [currentDirFiles, setCurrentDirFiles] = React.useState<FileItemProps[]>(data)
+	const [currentDirFilesRef, setCurrentDirFiles] = useRefState<FileItemProps[]>(data)
 
 	/** 点击在某些地方则认为是失去焦点，取消当前选中 */
 	const handleBlur = React.useCallback((e: MouseEvent) => {
@@ -57,7 +58,7 @@ const FileManager: FC<FileManagerProps> = props => {
 
 	/** 全选 */
 	usePressKey("a", () => {
-		setSelectedFiles(currentDirFiles)
+		setSelectedFiles(currentDirFilesRef.current)
 	}, {
 		metaKey: true,
 		preventDefault: true,
@@ -109,14 +110,21 @@ const FileManager: FC<FileManagerProps> = props => {
 	}
 
 	const onUploadChange: UploadProps["onChange"] = fileState => {
-		const files = currentDirFiles.filter(item => item.id !== fileState.id)
-		console.log('currentDirFiles: ', currentDirFiles);
+		const file = currentDirFilesRef.current.find(item => item.id === fileState.id)
+		const newItem = {
+			...fileState,
+			leaf: true,
+		}
+		if (file) {
+			const newState = [...currentDirFilesRef.current]
+			const index = newState.indexOf(file)
+			newState[index] = newItem
+			setCurrentDirFiles(newState)
+			return
+		}
 		const newState = [
-			...files,
-			{
-				...fileState,
-				leaf: true,
-			}
+			...currentDirFilesRef.current,
+			newItem
 		]
 		setCurrentDirFiles(newState)
 	}
@@ -168,7 +176,7 @@ const FileManager: FC<FileManagerProps> = props => {
 					<ContextMenu menu={contextMenu}>
 						<Content
 							level={currentLevel}
-							files={currentDirFiles}
+							files={currentDirFilesRef.current}
 							onEnterNextDir={onEnterNextDir}
 						/>
 					</ContextMenu>

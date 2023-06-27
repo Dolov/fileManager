@@ -7,7 +7,7 @@ export interface FileProps {
   onFileView(file: FileItemProps): void
 }
 
-const File: FC<FileProps> = props => {
+const File: FC<FileProps> = React.memo(props => {
   const { onSelectFile, selectedFiles, managerId, FileIcon = Icon, loadingColor } = React.useContext(StateContext)
   const { file, onFileView } = props
   const { name, leaf, progress, status } = file
@@ -49,7 +49,11 @@ const File: FC<FileProps> = props => {
       <FileName maxWidth={width} file={file} />
     </div>
   )
-}
+}, (prevProps, nextProps) => {
+  return (
+    prevProps.file === nextProps.file
+  )
+})
 
 
 const FileName: React.FC<{

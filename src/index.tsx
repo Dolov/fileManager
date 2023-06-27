@@ -1,6 +1,6 @@
 
 import FileManager, { FileManagerProps } from './FileManager'
-import Icons, { IconsProps, iconMap } from './Icons'
+import Icons, { IconsProps, iconMap } from './components/Icons'
 
 export default FileManager
 

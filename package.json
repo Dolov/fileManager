@@ -71,6 +71,7 @@
     "stylelint": "^15.7.0"
   },
   "dependencies": {
+    "react-contexify": "^6.0.0",
     "react-markdown": "^8.0.7",
     "react-modal": "^3.16.1",
     "react-viewer": "^3.2.2"

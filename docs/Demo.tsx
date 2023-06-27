@@ -170,7 +170,12 @@ const Demo: FC<DemoProps> = (props) => {
   }
 
   return (
-    <FileManager onRename={onRename} data={fileData} />
+    <FileManager
+      onRename={onRename}
+      data={fileData}
+      uploadUrl='https://upload.clickapaas.com/api/upload'
+      // uploadUrl='http://localhost:3000/api/upload'
+    />
   )
 }
 

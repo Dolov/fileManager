@@ -1,5 +1,5 @@
 import React, { FC } from 'react'
-import Icon, { IconsProps } from './Icons'
+import Icon, { IconsProps } from './components/Icons'
 import { transformType, useDomWidth, FileItemProps, prefixCls, classnames, StateContext, usePressKey } from './utils'
 
 export interface FileProps {

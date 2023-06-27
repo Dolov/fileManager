@@ -2,6 +2,8 @@ import React, { FC } from 'react'
 import HandlerBar from './HandlerBar'
 import { prefixCls, FileItemProps, StateContext, StateContextProps, useKey, usePressKey, getTargetElement } from './utils'
 import Content from './Content'
+import ContextMenu, { ContextMenuProps } from './components/ContextMenu'
+import UploadContainer, { UploadProps } from './components/Upload'
 
 import './style.less'
 
@@ -11,19 +13,24 @@ declare module 'react' {
   }
 }
 
-export interface FileManagerProps {
+export interface FileManagerProps extends Omit<UploadProps, 'onChange'> {
 	data: FileItemProps[]
 	/** 展示几列 */
 	columns?: number
 
 	onRename?(file: FileItemProps, newName: string): void
 	onDelete?(files: FileItemProps[]): void
+	onUpload?(file: File): void
 	FileIcon?: StateContextProps["FileIcon"]
+	onCreateDir?(dirName: string): void
 }
 
 const FileManager: FC<FileManagerProps> = props => {
 	
-	const { columns = 7, data, onRename, onDelete, FileIcon } = props
+	const {
+		columns = 7, data, FileIcon,
+		onRename, onDelete, onUpload, uploadUrl, uploadParams,
+	} = props
 
 	const isShift = useKey('Shift')
 	const managerId = React.useMemo(() => new Date().getTime(), [])
@@ -101,6 +108,38 @@ const FileManager: FC<FileManagerProps> = props => {
 		setDirStack(newStack)
 	}
 
+	const onUploadChange: UploadProps["onChange"] = fileState => {
+		const files = currentDirFiles.filter(item => item.id !== fileState.id)
+		console.log('currentDirFiles: ', currentDirFiles);
+		const newState = [
+			...files,
+			{
+				...fileState,
+				leaf: true,
+			}
+		]
+		setCurrentDirFiles(newState)
+	}
+
+	const contextMenu: ContextMenuProps["menu"] = React.useMemo(() => {
+		return [
+			{
+				key: 'upload',
+				label: '上传',
+				onClick() {
+
+				}
+			},
+			{
+				key: 'newDir',
+				label: '新建文件夹',
+				onClick() {
+
+				}
+			},
+		]
+	}, [])
+
 	const stateContextValue = React.useMemo(() => {
 		return {
 			onRename,
@@ -121,11 +160,19 @@ const FileManager: FC<FileManagerProps> = props => {
 					enterTheDir={enterTheDir}
 					onLevelChange={setCurrentLevel}
 				/>
-				<Content
-					level={currentLevel}
-					files={currentDirFiles}
-					onEnterNextDir={onEnterNextDir}
-				/>
+				<UploadContainer
+					onChange={onUploadChange}
+					uploadUrl={uploadUrl}
+					uploadParams={uploadParams}
+				>
+					<ContextMenu menu={contextMenu}>
+						<Content
+							level={currentLevel}
+							files={currentDirFiles}
+							onEnterNextDir={onEnterNextDir}
+						/>
+					</ContextMenu>
+				</UploadContainer>
 			</div>
 		</StateContext.Provider>
 	)

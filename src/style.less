@@ -10,6 +10,21 @@
 
 .@{prefixCls} {
 
+  --contexify-menu-bgColor: #f7f7f7;
+  --contexify-item-color: rgba(0, 0, 0, 0.8);
+  // --contexify-activeItem-bgColor: @primaryColor;
+
+  &-uploader {
+    border-radius: 5px;
+    padding: 12px 0;
+    &.dragging {
+      background: #e6fffb;
+    }
+    &.uploading {
+      background: #e6f4ff;
+    }
+  }
+
   &-icon {
     display: inline-flex;
     font-size: 18px;

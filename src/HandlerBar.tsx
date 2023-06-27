@@ -1,6 +1,6 @@
 import React, { FC } from 'react'
 import { prefixCls, FileItemProps, getTheParent } from './utils'
-import Icon from './Icons'
+import Icon from './components/Icons'
 
 export interface HandlerBarProps {
   data: FileItemProps[]

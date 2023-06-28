@@ -2,7 +2,7 @@ import React, { FC } from 'react'
 import { produce } from "immer"
 import HandlerBar from './HandlerBar'
 import { prefixCls, FileItemProps, StateContext, StateContextProps, useKey, usePressKey, getTargetElement } from './utils'
-import Content from './Content'
+import Content, { ContentProps } from './Content'
 import ContextMenu, { ContextMenuProps } from './components/ContextMenu'
 import UploadContainer, { UploadProps } from './components/Upload'
 import useUpdateEffect from './hooks/useUpdateEffect'
@@ -17,15 +17,16 @@ declare module 'react' {
 
 export interface FileManagerProps extends Omit<UploadProps, 'onChange'> {
 	data: FileItemProps[]
-	onChange(data: FileItemProps[], file: FileItemProps): void
 	/** 展示几列 */
 	columns?: number
-
+	onChange?(data: FileItemProps[], file: FileItemProps): void
 	onRename?(file: FileItemProps, newName: string): void
 	onDelete?(files: FileItemProps[]): void
 	onUpload?(file: File): void
-	FileIcon?: StateContextProps["FileIcon"]
 	Empty?: React.FC
+	Loading?: React.FC
+	FileIcon?: StateContextProps["FileIcon"]
+	onLoadData?: ContentProps["onLoadData"]
 	onCreateDir?(dirName: string): void
 	loadingColor?: string;
 }
@@ -33,27 +34,37 @@ export interface FileManagerProps extends Omit<UploadProps, 'onChange'> {
 const FileManager: FC<FileManagerProps> = props => {
 	
 	const {
-		columns = 7, loadingColor = "gray", data, FileIcon,
-		onRename, onDelete, onUpload, onChange, Empty,
+		FileIcon, Loading, Empty,
+		data, columns = 7, loadingColor = "gray",
+		onRename, onDelete, onUpload, onChange, onLoadData,
 		uploadUrl, uploadParams,
 	} = props
 
 	/** 避免循环 onChange 时引用的状态为旧的 */
 	const dataRef = React.useRef<FileItemProps[]>([])
 	dataRef.current = data
-
+	/** 多选 */
 	const isShift = useKey('Shift')
+	/** 当前实例 id */
 	const managerId = React.useMemo(() => new Date().getTime(), [])
+	/** 面包屑 */
 	const [dirStack, setDirStack] = React.useState<FileItemProps[]>([])
+	/** 记录当前的层级 */
 	const [currentLevel, setCurrentLevel] = React.useState(0)
+	/** 选中的文件 */
 	const [selectedFiles, setSelectedFiles] = React.useState<FileItemProps[]>([])
-	const [currentDirFiles, setCurrentDirFiles] = React.useState<FileItemProps[]>(data)
+	/** 设置当前展示节点 */
+	const [currentFile, setCurrentFile] = React.useState<FileItemProps>({
+		children: data
+	} as FileItemProps)
 
 	useUpdateEffect(() => {
-		const target = dirStack.reduce((previousValue, currentValue) => {
-			return previousValue.find(item => item.id === currentValue.id)?.children || []
-		}, data)
-		setCurrentDirFiles(target)
+		// const target = dirStack.reduce((previousValue, currentValue) => {
+		// 	return previousValue.children.find(item => item.id === currentValue.id)
+		// }, {
+		// 	children: data
+		// })
+		// // setCurrentFile(target)
 	}, [data])
 
 	/** 点击在某些地方则认为是失去焦点，取消当前选中 */
@@ -74,7 +85,7 @@ const FileManager: FC<FileManagerProps> = props => {
 
 	/** 全选 */
 	usePressKey("a", () => {
-		setSelectedFiles(currentDirFiles)
+		setSelectedFiles(currentFile.children!)
 	}, {
 		metaKey: true,
 		preventDefault: true,
@@ -94,17 +105,14 @@ const FileManager: FC<FileManagerProps> = props => {
 		}
 	}, [columns])
 
-	/** 进入文件夹 */
-	const enterTheDir = (file: FileItemProps) => {
-		if (!file) return
-		setCurrentDirFiles(file.children!)
-	}
-
-	const onEnterNextDir = (file: FileItemProps, index: number) => {
-		enterTheDir(file)
-		setCurrentLevel(index + 1)
-		const newStack = dirStack.slice(0, index).concat(file)
-		setDirStack(newStack)
+	/** 进入某个文件夹，处理层级关系 */
+	const onEnterTheDir = async (file: FileItemProps, nextLevel: number, stack = true) => {
+		setCurrentFile(file)
+		setCurrentLevel(nextLevel)
+		if (stack) {
+			const newStack = dirStack.slice(0, nextLevel - 1).concat(file)
+			setDirStack(newStack)
+		}
 	}
 
 	/** 文件的单选与多选 */
@@ -125,7 +133,9 @@ const FileManager: FC<FileManagerProps> = props => {
 		setSelectedFiles([file])
 	}
 
+	/** 上传文件，更新数据 */
 	const onUploadChange: UploadProps["onChange"] = fileState => {
+		if (!onChange) return
 		const nextState = produce(dataRef.current, draft => {
 			let files = draft
 			dirStack.forEach(dir => {
@@ -147,8 +157,7 @@ const FileManager: FC<FileManagerProps> = props => {
 				})
 			}
 		})
-
-		onChange && onChange(nextState, fileState as unknown as FileItemProps)
+		onChange(nextState, fileState as unknown as FileItemProps)
 	}
 
 	const contextMenu: ContextMenuProps["menu"] = React.useMemo(() => {
@@ -181,16 +190,15 @@ const FileManager: FC<FileManagerProps> = props => {
 		}
 	}, [selectedFiles, loadingColor, FileIcon])
 
-
 	return (
 		<StateContext.Provider value={stateContextValue}>
 			<div className={prefixCls} style={style}>
 				<HandlerBar
 					data={data}
+					file={currentFile}
 					level={currentLevel}
 					dirStack={dirStack}
-					enterTheDir={enterTheDir}
-					onLevelChange={setCurrentLevel}
+					onEnterTheDir={onEnterTheDir}
 				/>
 				<UploadContainer
 					onChange={onUploadChange}
@@ -199,10 +207,11 @@ const FileManager: FC<FileManagerProps> = props => {
 				>
 					<ContextMenu menu={contextMenu}>
 						<Content
+							file={currentFile}
 							level={currentLevel}
-							files={currentDirFiles}
 							Empty={Empty}
-							onEnterNextDir={onEnterNextDir}
+							onLoadData={onLoadData}
+							onEnterTheDir={onEnterTheDir}
 						/>
 					</ContextMenu>
 				</UploadContainer>

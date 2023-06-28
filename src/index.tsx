@@ -1,7 +1,7 @@
 
 import FileManager, { FileManagerProps } from './FileManager'
 import Icons, { IconsProps, iconMap } from './components/Icons'
-import { uuid } from './utils'
+import { uuid, FileItemProps } from './utils'
 
 export default FileManager
 
@@ -13,5 +13,6 @@ export {
 
 export type {
   IconsProps,
-  FileManagerProps
+  FileManagerProps,
+  FileItemProps,
 }

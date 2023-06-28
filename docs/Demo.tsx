@@ -1,6 +1,6 @@
 import React, { FC } from 'react'
 import FileManager, { uuid, Icons } from 'react-file-manager';
-import type { FileManagerProps } from 'react-file-manager'
+import type { FileManagerProps, FileItemProps } from 'react-file-manager'
 
 
 export interface DemoProps {
@@ -167,9 +167,13 @@ const Demo: FC<DemoProps> = (props) => {
   const [fileData, setFileData] = React.useState<FileManagerProps["data"]>([])
   const [loading, setLoading] = React.useState(false)
 
-  const getFiles = async () => {
+  const getFiles = async (prefix?: string) => {
     const data: FileManagerProps["data"] = []
-    const res = await fetch('http://localhost:3000/api/files').then(res => res.json())
+    let url = 'http://localhost:3000/api/files'
+    if (prefix) {
+      url = `${url}?prefix=${prefix}`
+    }
+    const res = await fetch(url).then(res => res.json())
     const { objects, prefixes } = res
     prefixes.forEach(dir => {
       data.push({
@@ -218,6 +222,11 @@ const Demo: FC<DemoProps> = (props) => {
 
   }
 
+  const onLoadData = async (file: FileItemProps) => {
+    const data = await getFiles(`${file.name}/`)
+    return data
+  }
+
   if (loading) {
     return (
       <div style={{ display: 'flex', justifyContent: 'center' }}>
@@ -234,7 +243,7 @@ const Demo: FC<DemoProps> = (props) => {
       onChange={onChange}
       onDelete={onDelete}
       uploadParams={getUploadParams}
-      
+      onLoadData={onLoadData}
       // uploadUrl='http://localhost:3000/api/upload'
     />
   )

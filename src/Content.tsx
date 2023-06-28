@@ -5,32 +5,74 @@ import Icons from './components/Icons'
 import FileViewer from './Viewers/index'
 
 export interface ContentProps {
-  files: FileItemProps[]
+  file: FileItemProps
   level: number
+  onEnterTheDir(file: FileItemProps, nextLevel: number): void
   Empty?: React.FC
-  onEnterNextDir(file: FileItemProps, level: number): void
+  Loading?: React.FC
+  onLoadData?(file: FileItemProps): Promise<FileItemProps[]>
 }
 
-const Content: FC<ContentProps> = (props) => {
-  const { files, onEnterNextDir, level, Empty } = props
+const Content: FC<ContentProps> = props => {
+  const { file, onEnterTheDir, level, Empty, Loading, onLoadData } = props
+  const { id, children: files = [] } = file || {}
+
+  const [status, setStatus] = React.useState<Record<string, any>>({})
 
   const fileViewerRef = React.useRef<ViewerRefProps>(null)
+
+  const done = status[id] === 'done'
+  const loading = status[id] === 'loading'
+
+  React.useEffect(() => {
+    if (!id) return
+    if (Array.isArray(files) && files.length) {
+      setStatus({
+        ...status,
+        [id]: 'done'
+      })
+      return
+    }
+    if (onLoadData) {
+      setStatus({
+        ...status,
+        [id]: 'loading'
+      })
+      onLoadData(file).then(res => {
+        setStatus({
+          ...status,
+          [id]: 'done'
+        })
+      })
+    }
+  }, [id])
 
   const handleFileView = (file: FileItemProps) => {
     /** 点击了文件夹 */
     if (!file.leaf) {
-      onEnterNextDir(file, level)
+      onEnterTheDir(file, level + 1)
       return
     }
     if (!fileViewerRef.current) return
     fileViewerRef.current.open(file)
   }
 
-  if (files.length === 0) {
+  /** 没有数据，展示空 */
+  if (files.length === 0 && done) {
     const empty = Empty ? <Empty />: <Icons name="empty" size={300} />
     return (
       <div className='flex-center'>
         {empty}
+      </div>
+    )
+  }
+
+  /** 异步加载数据 */
+  if (files.length === 0 && loading) {
+    const loading = Loading ? <Loading />: <Icons name="loading" size={64} />
+    return (
+      <div className='flex-center'>
+        {loading}
       </div>
     )
   }

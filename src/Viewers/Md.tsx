@@ -25,7 +25,6 @@ export interface MdProps {
 }
 
 const Md: React.ForwardRefRenderFunction<ViewerRefProps, MdProps> = (props, ref) => {
-  console.log('render - md-viewer')
   const { } = props
 
   const [mdText, setMdText] = React.useState('')

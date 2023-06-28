@@ -3,28 +3,28 @@ import { prefixCls, FileItemProps } from './utils'
 import Icon from './components/Icons'
 
 export interface HandlerBarProps {
+  file: FileItemProps
   data: FileItemProps[]
   level: number
   dirStack: FileItemProps[]
-  enterTheDir(file: FileItemProps): void
-  onLevelChange(level: number): void
+  onEnterTheDir(file: FileItemProps, nextLevel: number, stack?: boolean): void
 }
 
 export interface HandlerBarRefProps {
 }
 
 const HandlerBar: React.ForwardRefRenderFunction<HandlerBarRefProps, HandlerBarProps> = (props, ref) => {
-  const { data, enterTheDir, dirStack = [], level, onLevelChange } = props
+  const { file, data, onEnterTheDir, dirStack = [], level } = props
 
   React.useImperativeHandle(ref, () => {
     return {
     }
   }, [])
 
-  const getFile = (level: number) => {
+  const getFile = (nextLevel: number) => {
     const defaultValue = { children: data } as FileItemProps
     return dirStack.reduce((previousValue, currentValue, index) => {
-      if (index >= level) return previousValue
+      if (index >= nextLevel) return previousValue
 			return (previousValue.children || []).find(item => item.id === currentValue.id) as FileItemProps
 		}, defaultValue)
   }
@@ -33,16 +33,14 @@ const HandlerBar: React.ForwardRefRenderFunction<HandlerBarRefProps, HandlerBarP
     const nextLevel = level - 1
     if (nextLevel < 0) return
     const parentFile = getFile(nextLevel)
-    enterTheDir(parentFile)
-    onLevelChange(nextLevel)
+    onEnterTheDir(parentFile, nextLevel, false)
   }
 
   const handleNext = () => {
     const nextLevel = level + 1
     if (nextLevel > dirStack.length) return
     const parentFile = getFile(nextLevel)
-    enterTheDir(parentFile)
-    onLevelChange(nextLevel)
+    onEnterTheDir(parentFile, nextLevel, false)
   }
 
   if (dirStack.length === 0) return null
@@ -52,11 +50,9 @@ const HandlerBar: React.ForwardRefRenderFunction<HandlerBarRefProps, HandlerBarP
       <div className={`${prefixCls}-handler-bar-left`}>
         <Icon onClick={handlePrev} className={`${prefixCls}-handler-bar-prev`} name="left" />
         <Icon onClick={handleNext} className={`${prefixCls}-handler-bar-next`} name="right" />
-        <span className={`${prefixCls}-handler-bar-dir-name`}>{dirStack[level - 1]?.name}</span>
+        <span className={`${prefixCls}-handler-bar-dir-name`}>{file.name}</span>
       </div>
-      <div className={`${prefixCls}-handler-bar-right`}>
-        
-      </div>
+      <div className={`${prefixCls}-handler-bar-right`}></div>
     </div>
   )
 }

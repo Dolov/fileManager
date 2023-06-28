@@ -7,7 +7,6 @@ export interface ImageViewerProps {
 }
 
 const ImageView: React.ForwardRefRenderFunction<ViewerRefProps, ImageViewerProps> = (props, ref) => {
-  console.log('render - image-viewer')
   const { data } = props
 
   const [activeIndex, setActiveIndex] = React.useState<number>()

@@ -24,7 +24,6 @@ export interface MdProps {
 }
 
 const Pdf: React.ForwardRefRenderFunction<ViewerRefProps, MdProps> = (props, ref) => {
-  console.log('render - text-viewer')
   const { } = props
 
   const [mdText, setMdText] = React.useState('')

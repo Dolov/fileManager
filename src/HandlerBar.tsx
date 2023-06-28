@@ -1,5 +1,5 @@
-import React, { FC } from 'react'
-import { prefixCls, FileItemProps, getTheParent } from './utils'
+import React from 'react'
+import { prefixCls, FileItemProps } from './utils'
 import Icon from './components/Icons'
 
 export interface HandlerBarProps {
@@ -21,20 +21,28 @@ const HandlerBar: React.ForwardRefRenderFunction<HandlerBarRefProps, HandlerBarP
     }
   }, [])
 
+  const getFile = (level: number) => {
+    const defaultValue = { children: data } as FileItemProps
+    return dirStack.reduce((previousValue, currentValue, index) => {
+      if (index >= level) return previousValue
+			return (previousValue.children || []).find(item => item.id === currentValue.id) as FileItemProps
+		}, defaultValue)
+  }
+
   const handlePrev = () => {
     const nextLevel = level - 1
     if (nextLevel < 0) return
-    const dir = dirStack[nextLevel]
-    const parentNode = getTheParent(dir, data)
-    enterTheDir(parentNode!)
+    const parentFile = getFile(nextLevel)
+    enterTheDir(parentFile)
     onLevelChange(nextLevel)
   }
 
   const handleNext = () => {
-    if (level === dirStack.length) return
-    const dir = dirStack[level]
-    enterTheDir(dir)
-    onLevelChange(level + 1)
+    const nextLevel = level + 1
+    if (nextLevel > dirStack.length) return
+    const parentFile = getFile(nextLevel)
+    enterTheDir(parentFile)
+    onLevelChange(nextLevel)
   }
 
   if (dirStack.length === 0) return null

@@ -71,6 +71,7 @@
     "stylelint": "^15.7.0"
   },
   "dependencies": {
+    "immer": "^10.0.2",
     "react-contexify": "^6.0.0",
     "react-markdown": "^8.0.7",
     "react-modal": "^3.16.1",

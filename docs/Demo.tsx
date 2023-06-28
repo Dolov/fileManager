@@ -9,7 +9,7 @@ export interface DemoProps {
 
 const data: FileManagerProps["data"] = [
   {
-    id: "1",
+    id: "1av",
     name: "v1",
     leaf: false,
     children: [
@@ -21,12 +21,13 @@ const data: FileManagerProps["data"] = [
           {
             name: 'reac12t使用说12明.md',
             leaf: true,
-            id: "123adfa",
+            id: "123azcvdfa",
             url: "https://dolov-upic.oss-cn-beijing.aliyuncs.com/README.md"
           },
         ]
       },
       {
+        id: "asd.",
         name: 'reac12t使用说明.md',
         leaf: true,
         url: "https://dolov-upic.oss-cn-beijing.aliyuncs.com/README.md"
@@ -34,19 +35,19 @@ const data: FileManagerProps["data"] = [
     ]
   },
   {
-    id: "2",
+    id: "2z",
     name: "v2",
     leaf: false,
     children: [
       {
-        id: "12",
+        id: "1asdfb2",
         name: 'react使32用说明.md',
         leaf: true,
       },
     ]
   },
   {
-    id: "3",
+    id: "3876fgs",
     name: "v3",
     leaf: false,
     children: [
@@ -57,24 +58,24 @@ const data: FileManagerProps["data"] = [
     ]
   },
   {
-    id: "121212",
+    id: "1212bb12",
     name: "v4",
     leaf: false,
     children: [
       {
-        id: "12121a2",
+        id: "12ss121a2",
         name: 'react使用说明.md',
         leaf: true,
       },
     ]
   },
   {
-    id: "12121ba2",
+    id: "12121gsba2",
     name: "v5",
     leaf: false,
     children: [
       {
-        id: "12121baa2",
+        id: "12121bxvbaa2",
         name: 'react使用说明.md',
         leaf: true,
       },
@@ -86,7 +87,7 @@ const data: FileManagerProps["data"] = [
     leaf: false,
     children: [
       {
-        id: "121a21baab2",
+        id: "121a2hdgd1baab2",
         name: 'react使用说明.md',
         leaf: true,
       },
@@ -98,7 +99,7 @@ const data: FileManagerProps["data"] = [
     leaf: true,
   },
   {
-    id: "121a21bfafabab2",
+    id: "121a21zdvbfafabab2",
     name: '会议纪要1.xls',
     leaf: true,
   },
@@ -169,11 +170,16 @@ const Demo: FC<DemoProps> = (props) => {
 
   }
 
+  const onChange = (files) => {
+    setFileData(files)
+  }
+
   return (
     <FileManager
       onRename={onRename}
       data={fileData}
       uploadUrl='https://upload.clickapaas.com/api/upload'
+      onChange={onChange}
       // uploadUrl='http://localhost:3000/api/upload'
     />
   )

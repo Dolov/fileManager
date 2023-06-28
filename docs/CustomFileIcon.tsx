@@ -38,11 +38,7 @@ const data: FileManagerProps["data"] = [
     name: "v2",
     leaf: false,
     children: [
-      {
-        id: "12",
-        name: 'react使32用说明.md',
-        leaf: true,
-      },
+      
     ]
   },
   {
@@ -174,11 +170,17 @@ const Demo: FC<DemoProps> = (props) => {
       data={fileData}
       onRename={onRename} 
       FileIcon={FileIcon}
+      Empty={() => {
+        return (
+          <span>尚无文件，请上传</span>
+        )
+      }}
     />
   )
 }
 
 const FileIcon: FileManagerProps["FileIcon"] = props => {
+  console.log('props: ', props);
   return (
     <Icons name="zip" size={props.size} />
   )

@@ -8,16 +8,24 @@ export interface FileProps {
 }
 
 const File: FC<FileProps> = React.memo(props => {
-  const { onSelectFile, selectedFiles, managerId, FileIcon = Icon, loadingColor } = React.useContext(StateContext)
+  const { onSelectFile, selectedFiles, managerId, FileIcon, loadingColor } = React.useContext(StateContext)
   const { file, onFileView } = props
   const { name, leaf, progress, status } = file
   const { ref, width } = useDomWidth()
 
   const ext = transformType(name) as IconsProps["name"]
   const iconWidth = width! * 0.7
-  const iconName = leaf ? ext: "folder"
+  const fileType = leaf ? ext: "folder"
 
-  const child = <FileIcon name={iconName} size={iconWidth} className="flex-center" />
+  let icon = (
+    <Icon name={fileType} size={iconWidth} className="flex-center" />
+  )
+
+  if (FileIcon) {
+    icon = (
+      <FileIcon size={iconWidth} fileType={fileType} file={file} />
+    )
+  }
 
   const handleClick = () => onSelectFile(file)
 
@@ -44,7 +52,7 @@ const File: FC<FileProps> = React.memo(props => {
             <span>{progress}</span>
           </span>
         )}
-        {child}
+        {icon}
       </span>
       <FileName maxWidth={width} file={file} />
     </div>

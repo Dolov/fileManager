@@ -1,5 +1,5 @@
 import React, { FC } from 'react'
-import FileManager from 'react-file-manager';
+import FileManager, { uuid, Icons } from 'react-file-manager';
 import type { FileManagerProps } from 'react-file-manager'
 
 
@@ -164,7 +164,42 @@ const data: FileManagerProps["data"] = [
 
 const Demo: FC<DemoProps> = (props) => {
   const {  } = props
-  const [fileData, setFileData] = React.useState(data)
+  const [fileData, setFileData] = React.useState<FileManagerProps["data"]>([])
+  const [loading, setLoading] = React.useState(false)
+
+  const getFiles = async () => {
+    const data: FileManagerProps["data"] = []
+    const res = await fetch('http://localhost:3000/api/files').then(res => res.json())
+    const { objects, prefixes } = res
+    prefixes.forEach(dir => {
+      data.push({
+        id: dir,
+        name: dir.replace('/', ''),
+        leaf: false,
+        children: [],
+      })
+    });
+    objects.forEach(object => {
+      const { name, url } = object
+      data.push({
+        url,
+        name,
+        id: uuid(),
+        leaf: true,
+        children: [],
+      })
+    });
+    return data
+  }
+
+  React.useEffect(() => {
+    setLoading(true)
+    getFiles().then(files => {
+      setFileData(files)
+    }).finally(() => {
+      setLoading(false)
+    })
+  }, [])
 
   const onRename = (file, newName) => {
 
@@ -174,12 +209,32 @@ const Demo: FC<DemoProps> = (props) => {
     setFileData(files)
   }
 
+  const onDelete = (files) => {
+    console.log('files: ', files);
+  }
+
+  const getUploadParams = file => {
+    console.log('file: ', file);
+
+  }
+
+  if (loading) {
+    return (
+      <div style={{ display: 'flex', justifyContent: 'center' }}>
+        <Icons size={64} name="loading" />
+      </div>
+    )
+  }
+
   return (
     <FileManager
       onRename={onRename}
       data={fileData}
       uploadUrl='https://upload.clickapaas.com/api/upload'
       onChange={onChange}
+      onDelete={onDelete}
+      uploadParams={getUploadParams}
+      
       // uploadUrl='http://localhost:3000/api/upload'
     />
   )

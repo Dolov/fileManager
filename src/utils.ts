@@ -5,9 +5,10 @@ export const prefixCls = 'doraa-file-manager'
 
 export interface FileItemProps {
 	id: string
-	url: string
 	name: string
 	leaf: boolean
+	url?: string
+	size?: number,
 	status?: "success" | "error" | "uploading"
 	progress?: number
 	children?: FileItemProps[]
@@ -76,7 +77,7 @@ export interface StateContextProps {
 	onSelectFile(file: FileItemProps): void
 	selectedFiles: FileItemProps[]
 	onRename?(file: FileItemProps, newName: string): void
-	FileIcon?: React.FC<{name: string, size: number, [key: string]: any}>
+	FileIcon?: React.FC<{fileType: string, file: FileItemProps, size: number, [key: string]: any}>
 	loadingColor?: string
 }
 

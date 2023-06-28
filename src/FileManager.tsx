@@ -25,6 +25,7 @@ export interface FileManagerProps extends Omit<UploadProps, 'onChange'> {
 	onDelete?(files: FileItemProps[]): void
 	onUpload?(file: File): void
 	FileIcon?: StateContextProps["FileIcon"]
+	Empty?: React.FC
 	onCreateDir?(dirName: string): void
 	loadingColor?: string;
 }
@@ -33,7 +34,7 @@ const FileManager: FC<FileManagerProps> = props => {
 	
 	const {
 		columns = 7, loadingColor = "gray", data, FileIcon,
-		onRename, onDelete, onUpload, onChange, 
+		onRename, onDelete, onUpload, onChange, Empty,
 		uploadUrl, uploadParams,
 	} = props
 
@@ -180,6 +181,7 @@ const FileManager: FC<FileManagerProps> = props => {
 		}
 	}, [selectedFiles, loadingColor, FileIcon])
 
+
 	return (
 		<StateContext.Provider value={stateContextValue}>
 			<div className={prefixCls} style={style}>
@@ -199,6 +201,7 @@ const FileManager: FC<FileManagerProps> = props => {
 						<Content
 							level={currentLevel}
 							files={currentDirFiles}
+							Empty={Empty}
 							onEnterNextDir={onEnterNextDir}
 						/>
 					</ContextMenu>

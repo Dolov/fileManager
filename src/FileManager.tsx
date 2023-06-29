@@ -29,6 +29,8 @@ export interface FileManagerProps extends Omit<UploadProps, 'onChange'> {
 	onLoadData?: ContentProps["onLoadData"]
 	onCreateDir?(dirName: string): void
 	loadingColor?: string;
+	/** 图片是否展示缩略图，支持自定义展示规则 */
+	showImageThumb?: StateContextProps["showImageThumb"]
 }
 
 const FileManager: FC<FileManagerProps> = props => {
@@ -37,7 +39,7 @@ const FileManager: FC<FileManagerProps> = props => {
 		FileIcon, Loading, Empty,
 		data, columns = 7, loadingColor = "gray",
 		onRename, onDelete, onUpload, onChange, onLoadData,
-		uploadUrl, uploadParams,
+		uploadUrl, uploadParams, showImageThumb,
 	} = props
 
 	/** 避免循环 onChange 时引用的状态为旧的 */
@@ -210,8 +212,9 @@ const FileManager: FC<FileManagerProps> = props => {
 			loadingColor,
 			onSelectFile,
 			selectedFiles,
+			showImageThumb,
 		}
-	}, [selectedFiles, loadingColor, FileIcon])
+	}, [selectedFiles, loadingColor, FileIcon, showImageThumb])
 
 	return (
 		<StateContext.Provider value={stateContextValue}>

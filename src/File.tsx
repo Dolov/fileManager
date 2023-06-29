@@ -1,6 +1,7 @@
 import React, { FC } from 'react'
 import Icon, { IconsProps } from './components/Icons'
 import { transformType, useDomWidth, FileItemProps, prefixCls, classnames, StateContext, usePressKey } from './utils'
+import ImageThumb from './components/ImageThumb'
 
 export interface FileProps {
   file: FileItemProps
@@ -8,9 +9,9 @@ export interface FileProps {
 }
 
 const File: FC<FileProps> = React.memo(props => {
-  const { onSelectFile, selectedFiles, managerId, FileIcon, loadingColor } = React.useContext(StateContext)
+  const { onSelectFile, selectedFiles, managerId, FileIcon, loadingColor, showImageThumb = true } = React.useContext(StateContext)
   const { file, onFileView } = props
-  const { name, leaf, progress, status } = file
+  const { name, leaf, progress, status, url } = file
   const { ref, width } = useDomWidth()
 
   const ext = transformType(name) as IconsProps["name"]
@@ -24,6 +25,19 @@ const File: FC<FileProps> = React.memo(props => {
   if (FileIcon) {
     icon = (
       <FileIcon size={iconWidth} fileType={fileType} file={file} />
+    )
+  }
+
+  /** 图片开启缩略图预览 */
+  if (showImageThumb && ext === 'image') {
+    icon = (
+      <ImageThumb
+        file={file}
+        size={iconWidth}
+        className={`${prefixCls}-item-thumb`}
+        placeholder={icon}
+        getImageThumb={showImageThumb}
+      />
     )
   }
 
@@ -113,7 +127,7 @@ const FileName: React.FC<{
         ref={getElement}
         title={fileName}
         onClick={toEditMode}
-        style={{ width: maxWidth }}
+        style={{ maxWidth }}
         className={classnames(`${prefixCls}-item-name`, {
           'hidden': editing
         })}

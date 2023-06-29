@@ -79,6 +79,7 @@ export interface StateContextProps {
 	onRename?(file: FileItemProps, newName: string): void
 	FileIcon?: React.FC<{fileType: string, file: FileItemProps, size: number, [key: string]: any}>
 	loadingColor?: string
+	showImageThumb?: boolean | ((file: FileItemProps) => string)
 }
 
 export const StateContext = React.createContext<StateContextProps>({
@@ -146,6 +147,7 @@ export const imgTypes = ['jpeg', 'jpg', 'png', 'gif', 'bmp', 'webp', 'svg', 'svg
 export const wordTypes = ['doc', 'docx']
 export const excelTypes = ['xls', 'xlsx']
 
+/** 处理文件图标类型 */
 export const transformType = (name: string) => {
 	const ext = getExt(name)
 	if (!ext) return 'unknow'
@@ -156,6 +158,7 @@ export const transformType = (name: string) => {
 	return ext
 }
 
+/** 处理文件预览类型 */
 export const getFileViewType = (name: string) => {
 	const ext = getExt(name)
 	if (!ext) return

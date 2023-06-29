@@ -109,16 +109,17 @@ const FileName: React.FC<{
           maxWidth={maxWidth}
         />
       )}
-      <div
+      <span
         ref={getElement}
         title={fileName}
         onClick={toEditMode}
+        style={{ width: maxWidth }}
         className={classnames(`${prefixCls}-item-name`, {
           'hidden': editing
         })}
       >
         {fileName}
-      </div>
+      </span>
     </>
   )
 }

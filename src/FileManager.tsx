@@ -19,7 +19,7 @@ export interface FileManagerProps extends Omit<UploadProps, 'onChange'> {
 	data: FileItemProps[]
 	/** 展示几列 */
 	columns?: number
-	onChange?(data: FileItemProps[], file: FileItemProps): void
+	onChange?(data: FileItemProps[], file?: FileItemProps): void
 	onRename?(file: FileItemProps, newName: string): void
 	onDelete?(files: FileItemProps[]): void
 	onUpload?(file: File): void
@@ -59,12 +59,12 @@ const FileManager: FC<FileManagerProps> = props => {
 	} as FileItemProps)
 
 	useUpdateEffect(() => {
-		// const target = dirStack.reduce((previousValue, currentValue) => {
-		// 	return previousValue.children.find(item => item.id === currentValue.id)
-		// }, {
-		// 	children: data
-		// })
-		// // setCurrentFile(target)
+		const defaultValue = { children: data } as FileItemProps
+    const target = dirStack.reduce((previousValue, currentValue, index) => {
+      if (index >= currentLevel) return previousValue
+			return (previousValue.children || []).find(item => item.id === currentValue.id) as FileItemProps
+		}, defaultValue)
+		setCurrentFile(target)
 	}, [data])
 
 	/** 点击在某些地方则认为是失去焦点，取消当前选中 */
@@ -133,17 +133,29 @@ const FileManager: FC<FileManagerProps> = props => {
 		setSelectedFiles([file])
 	}
 
-	/** 上传文件，更新数据 */
-	const onUploadChange: UploadProps["onChange"] = fileState => {
-		if (!onChange) return
+	/** 获取需要更新的不可变数据数据 */
+	const getProxyNextState = (
+		targetFile: FileItemProps,
+		callback:(files: FileItemProps[], file?: FileItemProps) => void
+	) => {
 		const nextState = produce(dataRef.current, draft => {
 			let files = draft
-			dirStack.forEach(dir => {
+			dirStack.forEach((dir, index) => {
+				if (currentLevel >= index) return
 				const targetDir = files.find(item => item.id === dir.id)
 				files = targetDir?.children!
 			})
-			const file = files.find(item => item.id === fileState.id)
-			
+			const file = files.find(item => item.id === targetFile.id)
+			callback(files, file)
+		})
+		return nextState
+	}
+
+	/** 上传文件，更新数据 */
+	const onUploadChange: UploadProps["onChange"] = fileState => {
+		if (!onChange) return
+		// @ts-ignore todo
+		const nextState = getProxyNextState(fileState, (files, file) => {
 			if (file) {
 				const index = files.indexOf(file)
 				files[index] = {
@@ -160,6 +172,17 @@ const FileManager: FC<FileManagerProps> = props => {
 		onChange(nextState, fileState as unknown as FileItemProps)
 	}
 
+	/** 异步加载，更新数据 */
+	const onLoadDataChange = (parentDir: FileItemProps, loadFiles: FileItemProps[]) => {
+		if (!onChange) return
+		const nextState = getProxyNextState(parentDir, (files, file) => {
+			if (!file) return
+			file.children = loadFiles
+		})
+		onChange(nextState)
+	}
+
+	/** 右键菜单 */
 	const contextMenu: ContextMenuProps["menu"] = React.useMemo(() => {
 		return [
 			{
@@ -212,6 +235,7 @@ const FileManager: FC<FileManagerProps> = props => {
 							Empty={Empty}
 							onLoadData={onLoadData}
 							onEnterTheDir={onEnterTheDir}
+							onLoadDataChange={onLoadDataChange}
 						/>
 					</ContextMenu>
 				</UploadContainer>

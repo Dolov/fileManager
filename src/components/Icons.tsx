@@ -594,7 +594,7 @@ const Json = () => {
 }
 
 const Loading: React.FC<{ color: string }> = props => {
-  const { color = "#ff7c81" } = props
+  const { color = "gray" } = props
   return (
     <svg width="1em" height="1em" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
       <g transform="rotate(0 50 50)">

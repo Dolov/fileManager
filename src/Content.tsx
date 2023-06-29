@@ -11,10 +11,11 @@ export interface ContentProps {
   Empty?: React.FC
   Loading?: React.FC
   onLoadData?(file: FileItemProps): Promise<FileItemProps[]>
+  onLoadDataChange?(dir: FileItemProps, files: FileItemProps[]): void
 }
 
 const Content: FC<ContentProps> = props => {
-  const { file, onEnterTheDir, level, Empty, Loading, onLoadData } = props
+  const { file, onEnterTheDir, level, Empty, Loading, onLoadData, onLoadDataChange } = props
   const { id, children: files = [] } = file || {}
 
   const [status, setStatus] = React.useState<Record<string, any>>({})
@@ -24,6 +25,7 @@ const Content: FC<ContentProps> = props => {
   const done = status[id] === 'done'
   const loading = status[id] === 'loading'
 
+  /** id 变化时处理异步加载逻辑 */
   React.useEffect(() => {
     if (!id) return
     if (Array.isArray(files) && files.length) {
@@ -38,7 +40,8 @@ const Content: FC<ContentProps> = props => {
         ...status,
         [id]: 'loading'
       })
-      onLoadData(file).then(res => {
+      onLoadData(file).then(files => {
+        onLoadDataChange && onLoadDataChange(file, files)
         setStatus({
           ...status,
           [id]: 'done'

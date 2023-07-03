@@ -3,6 +3,8 @@ import { prefixCls, FileItemProps, ViewerRefProps } from './utils'
 import File from './File'
 import Icons from './components/Icons'
 import FileViewer from './Viewers/index'
+import ContextMenu, { ContextMenuProps } from './components/ContextMenu'
+
 
 export interface ContentProps {
   file: FileItemProps
@@ -60,9 +62,34 @@ const Content: FC<ContentProps> = props => {
     fileViewerRef.current.open(file)
   }
 
+  /** 右键菜单 */
+  const contextMenu: ContextMenuProps["menu"] = React.useMemo(() => {
+    return [
+      {
+        key: 'refresh',
+        label: '刷新',
+        onClick() {
+
+        }
+      }, {
+        key: 'upload',
+        label: '上传',
+        onClick() {
+
+        }
+      }, {
+        key: 'newDir',
+        label: '新建文件夹',
+        onClick() {
+
+        }
+      },
+    ]
+  }, [file])
+
   /** 没有数据，展示空 */
   if (files.length === 0 && done) {
-    const empty = Empty ? <Empty />: <Icons name="empty" size={300} />
+    const empty = Empty ? <Empty /> : <Icons name="empty" size={300} />
     return (
       <div className='flex-center'>
         {empty}
@@ -72,7 +99,7 @@ const Content: FC<ContentProps> = props => {
 
   /** 异步加载数据 */
   if (files.length === 0 && loading) {
-    const loading = Loading ? <Loading />: <Icons name="loading" size={64} />
+    const loading = Loading ? <Loading /> : <Icons name="loading" size={64} />
     return (
       <div className='flex-center'>
         {loading}
@@ -81,19 +108,23 @@ const Content: FC<ContentProps> = props => {
   }
 
   return (
-    <div className={`${prefixCls}-content`}>
-      {files.map(file => {
-        const { id } = file
-        return (
-          <File
-            key={id}
-            file={file}
-            onFileView={handleFileView}
-          />
-        )
-      })}
+    <>
+      <ContextMenu menu={contextMenu}>
+        <div className={`${prefixCls}-content`}>
+          {files.map(file => {
+            const { id } = file
+            return (
+              <File
+                key={id}
+                file={file}
+                onFileView={handleFileView}
+              />
+            )
+          })}
+        </div>
+      </ContextMenu>
       <FileViewer ref={fileViewerRef} data={files} />
-    </div>
+    </>
   )
 }
 

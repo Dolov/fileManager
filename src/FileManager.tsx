@@ -3,7 +3,6 @@ import { produce } from "immer"
 import HandlerBar from './HandlerBar'
 import { prefixCls, FileItemProps, StateContext, StateContextProps, useKey, usePressKey, getTargetElement } from './utils'
 import Content, { ContentProps } from './Content'
-import ContextMenu, { ContextMenuProps } from './components/ContextMenu'
 import UploadContainer, { UploadProps } from './components/Upload'
 import useUpdateEffect from './hooks/useUpdateEffect'
 
@@ -90,6 +89,7 @@ const FileManager: FC<FileManagerProps> = props => {
 	usePressKey("a", () => {
 		setSelectedFiles(currentFile.children!)
 	}, {
+		deps: [currentFile],
 		metaKey: true,
 		preventDefault: true,
 	})
@@ -185,31 +185,6 @@ const FileManager: FC<FileManagerProps> = props => {
 		onChange(nextState)
 	}
 
-	/** 右键菜单 */
-	const contextMenu: ContextMenuProps["menu"] = React.useMemo(() => {
-		return [
-			{
-				key: 'refresh',
-				label: '刷新',
-				onClick() {
-					onRefresh && onRefresh(currentFile)
-				}
-			}, {
-				key: 'upload',
-				label: '上传',
-				onClick() {
-
-				}
-			}, {
-				key: 'newDir',
-				label: '新建文件夹',
-				onClick() {
-
-				}
-			},
-		]
-	}, [currentFile])
-
 	const stateContextValue = React.useMemo(() => {
 		return {
 			onRename,
@@ -237,16 +212,14 @@ const FileManager: FC<FileManagerProps> = props => {
 					uploadUrl={uploadUrl}
 					uploadParams={uploadParams}
 				>
-					<ContextMenu menu={contextMenu}>
-						<Content
-							file={currentFile}
-							level={currentLevel}
-							Empty={Empty}
-							onLoadData={onLoadData}
-							onEnterTheDir={onEnterTheDir}
-							onLoadDataChange={onLoadDataChange}
-						/>
-					</ContextMenu>
+					<Content
+						file={currentFile}
+						level={currentLevel}
+						Empty={Empty}
+						onLoadData={onLoadData}
+						onEnterTheDir={onEnterTheDir}
+						onLoadDataChange={onLoadDataChange}
+					/>
 				</UploadContainer>
 			</div>
 		</StateContext.Provider>

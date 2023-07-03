@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import React from 'react'
 import ReactViewer from 'react-viewer'
 import { FileItemProps, getExt, imgTypes, ViewerRefProps } from '../utils'
 
@@ -21,7 +21,7 @@ const ImageView: React.ForwardRefRenderFunction<ViewerRefProps, ImageViewerProps
     return imgFiles.map(item => {
       return {
         id: item.id,
-        src: item.url,
+        src: item.url!,
         alt: item.name
       }
     })

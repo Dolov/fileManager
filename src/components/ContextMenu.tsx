@@ -3,9 +3,6 @@ import {
   Menu,
   MenuProps,
   Item,
-  ItemProps,
-  Separator,
-  Submenu,
   useContextMenu
 } from "react-contexify";
 
@@ -43,10 +40,6 @@ const ContextMenu: React.ForwardRefRenderFunction<ContextMenuRefProps, ContextMe
     id: menuId
   });
  
-  const handleItemClick: ItemProps["onClick"] = params => {
-    console.log('params: ', params);
-  }
-
   const onContextMenu: React.MouseEventHandler<HTMLDivElement> = e => {
     show({
       event: e,

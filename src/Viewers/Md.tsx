@@ -38,7 +38,7 @@ const Md: React.ForwardRefRenderFunction<ViewerRefProps, MdProps> = (props, ref)
   React.useImperativeHandle(ref, () => {
     return {
       async open(file: FileItemProps) {
-        const text = await getFileText(file.url)
+        const text = await getFileText(file.url!)
         setMdText(text)
         setVisible(true)
       }
@@ -53,7 +53,7 @@ const Md: React.ForwardRefRenderFunction<ViewerRefProps, MdProps> = (props, ref)
       style={customStyles}
       onRequestClose={() => setVisible(false)}
     >
-      <ReactMarkdown children={mdText} />
+      <ReactMarkdown>{mdText}</ReactMarkdown>
     </ReactModal>
   )
 }

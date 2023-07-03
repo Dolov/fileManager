@@ -23,6 +23,7 @@ export interface FileManagerProps extends Omit<UploadProps, 'onChange'> {
 	onRename?(file: FileItemProps, newName: string): void
 	onDelete?(files: FileItemProps[]): void
 	onUpload?(file: File): void
+	onRefresh?(file: FileItemProps): void
 	Empty?: React.FC
 	Loading?: React.FC
 	FileIcon?: StateContextProps["FileIcon"]
@@ -38,7 +39,7 @@ const FileManager: FC<FileManagerProps> = props => {
 	const {
 		FileIcon, Loading, Empty,
 		data, columns = 7, loadingColor = "gray",
-		onRename, onDelete, onUpload, onChange, onLoadData,
+		onRename, onDelete, onUpload, onChange, onLoadData, onRefresh,
 		uploadUrl, uploadParams, showImageThumb,
 	} = props
 
@@ -188,13 +189,18 @@ const FileManager: FC<FileManagerProps> = props => {
 	const contextMenu: ContextMenuProps["menu"] = React.useMemo(() => {
 		return [
 			{
+				key: 'refresh',
+				label: '刷新',
+				onClick() {
+					onRefresh && onRefresh(currentFile)
+				}
+			}, {
 				key: 'upload',
 				label: '上传',
 				onClick() {
 
 				}
-			},
-			{
+			}, {
 				key: 'newDir',
 				label: '新建文件夹',
 				onClick() {
@@ -202,7 +208,7 @@ const FileManager: FC<FileManagerProps> = props => {
 				}
 			},
 		]
-	}, [])
+	}, [currentFile])
 
 	const stateContextValue = React.useMemo(() => {
 		return {

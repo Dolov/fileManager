@@ -146,6 +146,7 @@ export const mdTypes = ['markdown', 'md']
 export const imgTypes = ['jpeg', 'jpg', 'png', 'gif', 'bmp', 'webp', 'svg', 'svgz']
 export const wordTypes = ['doc', 'docx']
 export const excelTypes = ['xls', 'xlsx']
+export const fontTypes = ['ttf']
 
 /** 处理文件图标类型 */
 export const transformType = (name: string) => {
@@ -155,6 +156,7 @@ export const transformType = (name: string) => {
 	if (imgTypes.includes(ext)) return 'image'
 	if (wordTypes.includes(ext)) return 'word'
 	if (excelTypes.includes(ext)) return 'excel'
+	if (fontTypes.includes(ext)) return 'font'
 	return ext
 }
 

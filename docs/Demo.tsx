@@ -169,7 +169,7 @@ const Demo: FC<DemoProps> = (props) => {
 
   const getFiles = async (prefix?: string) => {
     const data: FileManagerProps["data"] = []
-    let url = 'http://localhost:3000/api/files'
+    let url = 'https://file.clickapaas.com/api/files'
     if (prefix) {
       url = `${url}?prefix=${prefix}`
     }
@@ -223,7 +223,8 @@ const Demo: FC<DemoProps> = (props) => {
   }
 
   const onLoadData = async (file: FileItemProps) => {
-    const data = await getFiles(`${file.name}/`)
+    const prefix = file?.name ? `${file.name}/`: undefined
+    const data = await getFiles(prefix)
     return data
   }
 
@@ -244,6 +245,7 @@ const Demo: FC<DemoProps> = (props) => {
       onDelete={onDelete}
       uploadParams={getUploadParams}
       onLoadData={onLoadData}
+      onRefresh={onLoadData}
       // uploadUrl='http://localhost:3000/api/upload'
     />
   )

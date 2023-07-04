@@ -1,10 +1,10 @@
 import React, { FC } from 'react'
 import { produce } from "immer"
 import HandlerBar from './HandlerBar'
-import { prefixCls, FileItemProps, StateContext, StateContextProps, useKey, usePressKey, getTargetElement } from './utils'
 import Content, { ContentProps } from './Content'
 import UploadContainer, { UploadProps } from './components/Upload'
 import useUpdateEffect from './hooks/useUpdateEffect'
+import { prefixCls, FileItemProps, StateContext, StateContextProps, useKey, usePressKey, getTargetElement, ROOT_ID } from './utils'
 
 import './style.less'
 
@@ -22,7 +22,7 @@ export interface FileManagerProps extends Omit<UploadProps, 'onChange'> {
 	onRename?(file: FileItemProps, newName: string): void
 	onDelete?(files: FileItemProps[]): void
 	onUpload?(file: File): void
-	onRefresh?(file: FileItemProps): void
+	onRefresh?: ContentProps["onRefresh"]
 	Empty?: React.FC
 	Loading?: React.FC
 	FileIcon?: StateContextProps["FileIcon"]
@@ -57,11 +57,12 @@ const FileManager: FC<FileManagerProps> = props => {
 	const [selectedFiles, setSelectedFiles] = React.useState<FileItemProps[]>([])
 	/** 设置当前展示节点 */
 	const [currentFile, setCurrentFile] = React.useState<FileItemProps>({
-		children: data
+		children: data,
+		id: ROOT_ID
 	} as FileItemProps)
 
 	useUpdateEffect(() => {
-		const defaultValue = { children: data } as FileItemProps
+		const defaultValue = { children: data, id: ROOT_ID } as FileItemProps
     const target = dirStack.reduce((previousValue, currentValue, index) => {
       if (index >= currentLevel) return previousValue
 			return (previousValue.children || []).find(item => item.id === currentValue.id) as FileItemProps
@@ -175,9 +176,13 @@ const FileManager: FC<FileManagerProps> = props => {
 		onChange(nextState, fileState as unknown as FileItemProps)
 	}
 
-	/** 异步加载，更新数据 */
+	/** 更新数据 */
 	const onLoadDataChange = (parentDir: FileItemProps, loadFiles: FileItemProps[]) => {
 		if (!onChange) return
+		if (parentDir.id === ROOT_ID) {
+			onChange(loadFiles)
+			return
+		}
 		const nextState = getProxyNextState(parentDir, (files, file) => {
 			if (!file) return
 			file.children = loadFiles
@@ -216,6 +221,7 @@ const FileManager: FC<FileManagerProps> = props => {
 						file={currentFile}
 						level={currentLevel}
 						Empty={Empty}
+						onRefresh={onRefresh}
 						onLoadData={onLoadData}
 						onEnterTheDir={onEnterTheDir}
 						onLoadDataChange={onLoadDataChange}

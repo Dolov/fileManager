@@ -188,7 +188,7 @@ const Demo: FC<DemoProps> = (props) => {
       data.push({
         url,
         name,
-        id: uuid(),
+        id: url,
         leaf: true,
         children: [],
       })

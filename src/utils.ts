@@ -3,6 +3,8 @@ import React from 'react'
 /** 类名前缀 */
 export const prefixCls = 'doraa-file-manager'
 
+export const ROOT_ID = Symbol('rootId') as unknown as string
+
 export interface FileItemProps {
 	id: string
 	name: string

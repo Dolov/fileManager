@@ -1,10 +1,10 @@
 import React, { FC } from 'react'
-import { prefixCls, FileItemProps, ViewerRefProps } from './utils'
 import File from './File'
-import Icons from './components/Icons'
 import FileViewer from './Viewers/index'
+import Spin from './components/Spin'
+import Icons from './components/Icons'
 import ContextMenu, { ContextMenuProps } from './components/ContextMenu'
-
+import { prefixCls, FileItemProps, ViewerRefProps, ROOT_ID } from './utils'
 
 export interface ContentProps {
   file: FileItemProps
@@ -12,12 +12,16 @@ export interface ContentProps {
   onEnterTheDir(file: FileItemProps, nextLevel: number): void
   Empty?: React.FC
   Loading?: React.FC
+  onRefresh?(file: FileItemProps): FileItemProps[]
   onLoadData?(file: FileItemProps): Promise<FileItemProps[]>
   onLoadDataChange?(dir: FileItemProps, files: FileItemProps[]): void
 }
 
 const Content: FC<ContentProps> = props => {
-  const { file, onEnterTheDir, level, Empty, Loading, onLoadData, onLoadDataChange } = props
+  const {
+    file, level, Empty,
+    onLoadData, onLoadDataChange, onEnterTheDir, onRefresh
+  } = props
   const { id, children: files = [] } = file || {}
 
   const [status, setStatus] = React.useState<Record<string, any>>({})
@@ -30,6 +34,7 @@ const Content: FC<ContentProps> = props => {
   /** id 变化时处理异步加载逻辑 */
   React.useEffect(() => {
     if (!id) return
+    if (id === ROOT_ID) return
     if (Array.isArray(files) && files.length) {
       setStatus({
         ...status,
@@ -64,27 +69,44 @@ const Content: FC<ContentProps> = props => {
 
   /** 右键菜单 */
   const contextMenu: ContextMenuProps["menu"] = React.useMemo(() => {
-    return [
-      {
+    const menus = []
+    if (onRefresh) {
+      menus.push({
         key: 'refresh',
         label: '刷新',
-        onClick() {
-
+        async onClick() {
+          setStatus({
+            ...status,
+            [file.id]: 'loading',
+          })
+          const files = await onRefresh(file)
+          onLoadDataChange && onLoadDataChange(file, files)
+          setStatus({
+            ...status,
+            [file.id]: 'done',
+          })
         }
-      }, {
-        key: 'upload',
-        label: '上传',
-        onClick() {
+      })
+    }
 
-        }
-      }, {
-        key: 'newDir',
-        label: '新建文件夹',
-        onClick() {
+    return menus
+    // return [
+    //   {
+        
+    //   }, {
+    //     key: 'upload',
+    //     label: '上传',
+    //     onClick() {
 
-        }
-      },
-    ]
+    //     }
+    //   }, {
+    //     key: 'newDir',
+    //     label: '新建文件夹',
+    //     onClick() {
+
+    //     }
+    //   },
+    // ]
   }, [file])
 
   /** 没有数据，展示空 */
@@ -97,18 +119,8 @@ const Content: FC<ContentProps> = props => {
     )
   }
 
-  /** 异步加载数据 */
-  if (files.length === 0 && loading) {
-    const loading = Loading ? <Loading /> : <Icons name="loading" size={64} />
-    return (
-      <div className='flex-center'>
-        {loading}
-      </div>
-    )
-  }
-
   return (
-    <>
+    <Spin loading={loading}>
       <ContextMenu menu={contextMenu}>
         <div className={`${prefixCls}-content`}>
           {files.map(file => {
@@ -124,7 +136,7 @@ const Content: FC<ContentProps> = props => {
         </div>
       </ContextMenu>
       <FileViewer ref={fileViewerRef} data={files} />
-    </>
+    </Spin>
   )
 }
 

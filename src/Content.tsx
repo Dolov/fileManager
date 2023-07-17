@@ -4,7 +4,7 @@ import FileViewer from './Viewers/index'
 import Spin from './components/Spin'
 import Icons from './components/Icons'
 import ContextMenu, { ContextMenuProps } from './components/ContextMenu'
-import { prefixCls, FileItemProps, ViewerRefProps, ROOT_ID } from './utils'
+import { prefixCls, FileItemProps, ViewerRefProps, ROOT_ID, base64Encode } from './utils'
 
 export interface ContentProps {
   file: FileItemProps
@@ -63,8 +63,12 @@ const Content: FC<ContentProps> = props => {
       onEnterTheDir(file, level + 1)
       return
     }
-    if (!fileViewerRef.current) return
-    fileViewerRef.current.open(file)
+    
+    const url = base64Encode(file.url!)
+    window.open(`https://file-view.clickapaas.com/onlinePreview?url=${encodeURIComponent(url)}`)
+    // return
+    // if (!fileViewerRef.current) return
+    // fileViewerRef.current.open(file)
   }
 
   /** 右键菜单 */

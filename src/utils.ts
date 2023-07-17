@@ -215,3 +215,16 @@ export const uuid = () => {
 
   return uuid;
 }
+
+
+export const base64Encode = (str: string) => {
+	const frags = str.split('/')
+	const filename = frags[frags.length - 1]
+	frags[frags.length - 1] = encodeURIComponent(filename)
+	const url = frags.join('/')
+	console.log('url: ', url);
+  const encodedStr = encodeURIComponent(url).replace(/%([0-9A-F]{2})/g, (match, p1) => {
+    return String.fromCharCode(parseInt(p1, 16));
+  });
+  return btoa(encodedStr);
+}

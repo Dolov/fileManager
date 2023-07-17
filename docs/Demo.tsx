@@ -186,7 +186,7 @@ const Demo: FC<DemoProps> = (props) => {
     objects.forEach(object => {
       const { name, url } = object
       data.push({
-        url,
+        url: `https://cdn.clickapaas.com/${name}`,
         name,
         id: url,
         leaf: true,
